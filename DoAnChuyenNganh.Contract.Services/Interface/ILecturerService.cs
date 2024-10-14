@@ -1,5 +1,6 @@
 ﻿using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
+using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace DoAnChuyenNganh.Contract.Services.Interface
 {
     public interface ILecturerService 
     {
-        Task<BasePaginatedList<LecturerModelView>> GetLecturers(string? id, string? name, int index, int pageSize);
+        Task<BasePaginatedList<LecturerResponseDTO>> GetLecturers(string? id, string? name, int pageIndex, int pageSize);
         Task CreateLecturer(LecturerModelView lecturerModelView);
         Task UpdateLecturer(string id, LecturerModelView lecturerModelView);
         Task DeleteLecturer(string id);

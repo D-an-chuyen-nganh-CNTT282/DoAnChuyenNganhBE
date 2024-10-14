@@ -1,6 +1,7 @@
 ﻿using DoAnChuyenNganh.Contract.Services.Interface;
 using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
+using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,8 +20,8 @@ namespace DoAnChuyenNganhBE.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetLecturers(string? id, string? name, int index = 1, int pageSize = 10)
         {
-            BasePaginatedList<LecturerModelView>? paginatedLecturers = await _lecturerService.GetLecturers(id, name, index, pageSize);
-            return Ok(BaseResponse<BasePaginatedList<LecturerModelView>>.OkResponse(paginatedLecturers));
+            BasePaginatedList<LecturerResponseDTO>? paginatedLecturers = await _lecturerService.GetLecturers(id, name, index, pageSize);
+            return Ok(BaseResponse<BasePaginatedList<LecturerResponseDTO>>.OkResponse(paginatedLecturers));
         }
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn")]
         [HttpPost]

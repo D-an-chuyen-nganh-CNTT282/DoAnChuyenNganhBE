@@ -6,7 +6,10 @@ using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.Core.Store;
 using DoAnChuyenNganh.Core.Utils;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
+using DoAnChuyenNganh.ModelViews.ResponseDTO;
+using DoAnChuyenNganh.Repositories.Entity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -78,9 +81,44 @@ namespace DoAnChuyenNganh.Services.Service
             await _unitOfWork.GetRepository<Lecturer>().UpdateAsync(lecturer);
             await _unitOfWork.SaveAsync();
         }
-        public async Task<BasePaginatedList<LecturerModelView>> GetLecturers(string? id, string? name, int pageIndex, int pageSize)
+
+        private async Task<BasePaginatedList<LecturerResponseDTO>> PaginateLecturers(
+        IQueryable<Lecturer> query,
+        int? pageIndex,
+        int? pageSize)
         {
-            IQueryable<Lecturer>? query = _unitOfWork.GetRepository<Lecturer>().Entities.Where(lecturer => lecturer.DeletedTime != null);
+            int currentPage = pageIndex ?? 1;
+            int currentPageSize = pageSize ?? 10;
+            int totalItems = await query.CountAsync();
+
+            List<LecturerResponseDTO>? lecturers = await query
+                .Skip((currentPage - 1) * currentPageSize)
+                .Take(currentPageSize)
+                .Select(lecturer => new LecturerResponseDTO
+                {
+                    Id = lecturer.Id,
+                    LecturerName = lecturer.LecturerName,
+                    DayOfBirth = lecturer.DayOfBirth,
+                    LecturerGender = lecturer.LecturerGender,
+                    LecturerEmail = lecturer.LecturerEmail,
+                    LecturerPhone = lecturer.LecturerPhone,
+                    LecturerAddress = lecturer.LecturerAddress,
+                    Expertise = lecturer.Expertise,
+                    PersonalWebsiteLink = lecturer.PersonalWebsiteLink,
+                    CreatedBy = lecturer.CreatedBy,
+                    LastUpdatedBy = lecturer.LastUpdatedBy,
+                    DeletedBy = lecturer.DeletedBy,
+                    CreatedTime = lecturer.CreatedTime,
+                    LastUpdatedTime = lecturer.LastUpdatedTime,
+                    DeletedTime = lecturer.DeletedTime
+                })
+                .ToListAsync();
+
+            return new BasePaginatedList<LecturerResponseDTO>(lecturers, totalItems, currentPage, currentPageSize);
+        }
+        public async Task<BasePaginatedList<LecturerResponseDTO>> GetLecturers(string? id, string? name, int pageIndex, int pageSize)
+        {
+            IQueryable<Lecturer>? query = _unitOfWork.GetRepository<Lecturer>().Entities;
             if (!string.IsNullOrWhiteSpace(id))
             {
                 query = query.Where(lecturer => lecturer.Id == id);
@@ -89,40 +127,7 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 query = query.Where(lecturer => lecturer.LecturerName == name);
             }
-            BasePaginatedList<Lecturer>? paginatedLecturers = await _unitOfWork.GetRepository<Lecturer>().GetPagging(query, pageIndex, pageSize);
-            if (!paginatedLecturers.Items.Any())
-            {
-                if (!string.IsNullOrWhiteSpace(id))
-                {
-                    Lecturer? lecturerById = await _unitOfWork.GetRepository<Lecturer>().Entities
-                        .FirstOrDefaultAsync(lecturer => lecturer.Id == id && lecturer.DeletedTime == null);
-                    if (lecturerById != null)
-                    {
-                        LecturerModelView? lecturerModel = _mapper.Map<LecturerModelView>(lecturerById);
-                        return new BasePaginatedList<LecturerModelView>(new List<LecturerModelView> { lecturerModel }, 1, 1, 1);
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(name))
-                {
-                    List<Lecturer>? lecturerByName = await _unitOfWork.GetRepository<Lecturer>().Entities
-                        .Where(lecturer => lecturer.LecturerName == name && lecturer.DeletedTime == null)
-                        .ToListAsync();
-                    if (lecturerByName.Any())
-                    {
-                        List<LecturerModelView>? lecturerModels = _mapper.Map<List<LecturerModelView>>(lecturerByName);
-                        return new BasePaginatedList<LecturerModelView>(lecturerModels, 1, 1, lecturerByName.Count());
-                    }
-                }
-            }
-            //GetAll
-            List<LecturerModelView>? lecturerModelResult = _mapper.Map<List<LecturerModelView>>(paginatedLecturers.Items);
-            return new BasePaginatedList<LecturerModelView> (
-                lecturerModelResult,
-                paginatedLecturers.TotalItems,
-                paginatedLecturers.CurrentPage,
-                paginatedLecturers.PageSize
-            );
+            return await PaginateLecturers(query, pageIndex, pageSize);
         }
     }
 }

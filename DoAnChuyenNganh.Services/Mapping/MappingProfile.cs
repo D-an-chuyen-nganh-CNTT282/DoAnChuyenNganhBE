@@ -2,6 +2,7 @@
 using DoAnChuyenNganh.Contract.Repositories.Entity;
 using DoAnChuyenNganh.ModelViews.AuthModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
+using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using DoAnChuyenNganh.ModelViews.RoleViewModel;
 using DoAnChuyenNganh.ModelViews.UserModelViews;
 using DoAnChuyenNganh.Repositories.Entity;
@@ -33,9 +34,8 @@ namespace DoAnChuyenNganh.Services.Mapping
             .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Name));
             CreateMap<UserUpdateModelView, ApplicationUser>().ReverseMap();
 
-            CreateMap<Lecturer, LecturerModelView>();
-            CreateMap<LecturerModelView, Lecturer>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Lecturer, LecturerModelView>().ReverseMap();
+            CreateMap<LecturerResponseDTO, Lecturer>().ReverseMap();
         }
     }
 }

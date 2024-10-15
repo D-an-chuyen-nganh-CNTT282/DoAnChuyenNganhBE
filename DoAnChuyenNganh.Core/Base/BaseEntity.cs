@@ -1,5 +1,4 @@
 ﻿using DoAnChuyenNganh.Core.Utils;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DoAnChuyenNganh.Core.Base

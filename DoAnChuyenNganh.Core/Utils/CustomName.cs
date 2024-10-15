@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace DoAnChuyenNganh.Core.Utils
 {
     [AttributeUsage(AttributeTargets.All)]

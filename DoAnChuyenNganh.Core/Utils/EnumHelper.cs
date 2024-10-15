@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using DoAnChuyenNganh.Core.Utils;
+﻿using System.Reflection;
 
 namespace DoAnChuyenNganh.Core.Utils
 {

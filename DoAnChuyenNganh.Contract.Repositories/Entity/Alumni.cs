@@ -1,12 +1,6 @@
 ﻿using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.Repositories.Entity;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoAnChuyenNganh.Contract.Repositories.Entity
 {
@@ -36,9 +30,6 @@ namespace DoAnChuyenNganh.Contract.Repositories.Entity
         public required string LecturerId { get; set; }
         [ForeignKey("LecturerId")]
         public virtual Lecturer Lecturer { get; set; } = null!;
-
-        public virtual ICollection<AlumniActivities> AlumniActivities { get; set; } = new List<AlumniActivities>();
-
         public virtual ApplicationUser User { get; set; }
     }
 }

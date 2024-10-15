@@ -1,20 +1,12 @@
 ﻿using DoAnChuyenNganh.Contract.Repositories.Entity;
 using DoAnChuyenNganh.Repositories.Context;
-using Google;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoAnChuyenNganh.Services.Configs
 {
     public class DepartmentManager
     {
         private readonly DatabaseContext _context;
-
-        // Constructor nhận ApplicationDbContext để làm việc với cơ sở dữ liệu
         public DepartmentManager(DatabaseContext context)
         {
             _context = context;

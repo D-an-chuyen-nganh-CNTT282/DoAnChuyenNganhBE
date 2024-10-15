@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DoAnChuyenNganh.Services.EmailSettings
+﻿namespace DoAnChuyenNganh.Services.EmailSettings
 {
     public class EmailSettings
     {

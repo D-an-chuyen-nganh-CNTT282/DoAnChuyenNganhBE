@@ -22,7 +22,7 @@ namespace DoAnChuyenNganh.Contract.Repositories.Interface
         Task<T?> GetByIdAsync(object id);
         Task InsertAsync(T obj);
         Task UpdateAsync(T obj);
-        Task DeleteAsync(object id);
+        Task DeleteAsync(params object[] keyValues);
         Task SaveAsync();
     }
 }

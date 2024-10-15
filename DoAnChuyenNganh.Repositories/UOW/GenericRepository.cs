@@ -22,9 +22,9 @@ namespace DoAnChuyenNganh.Repositories.UOW
             _dbSet.Remove(entity);
         }
 
-        public async Task DeleteAsync(object id)
+        public async Task DeleteAsync(params object[] keyValues)
         {
-            T entity = await _dbSet.FindAsync(id) ?? throw new Exception();
+            T entity = await _dbSet.FindAsync(keyValues) ?? throw new Exception("Không tìm thấy thực thể với khóa chính đã cho.");
             _dbSet.Remove(entity);
         }
 

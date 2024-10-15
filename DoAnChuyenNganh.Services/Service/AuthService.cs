@@ -6,7 +6,6 @@ using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.Core.Store;
 using DoAnChuyenNganh.ModelViews.AuthModelViews;
 using DoAnChuyenNganh.Repositories.Entity;
-using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -131,75 +130,6 @@ namespace DoAnChuyenNganh.Services.Service
             };
 
         }
-        public async Task Register(RegisterModelView registerModelView)
-        {
-            ApplicationUser? user = await userManager.FindByNameAsync(registerModelView.Email);
-            if (user != null)
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Email đã tồn tại");
-            }
-            ApplicationUser? newUser = mapper.Map<ApplicationUser>(registerModelView);
-
-            newUser.UserName = registerModelView.Email;
-            newUser.Name = registerModelView.Name;
-
-            IdentityResult? result = await userManager.CreateAsync(newUser, registerModelView.Password);
-            if (result.Succeeded)
-            {
-                bool roleExist = await roleManager.RoleExistsAsync("Giảng viên");
-                if (!roleExist)
-                {
-                    await roleManager.CreateAsync(new ApplicationRole { Name = "Giảng viên" });
-                }
-                await userManager.AddToRoleAsync(newUser, "Giảng viên");
-                string OTP = GenerateOtp();
-                string cacheKey = $"OTP_{registerModelView.Email}";
-                memoryCache.Set(cacheKey, OTP, TimeSpan.FromMinutes(1));
-
-                await emailService.SendEmailAsync(registerModelView.Email, "Xác nhận tài khoản",
-                           $"Vui lòng xác nhận tài khoản của bạn, OTP của bạn là:  <div class='otp'>{OTP}</div>");
-            }
-            else
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.ServerError, ErrorCode.ServerError, $"Error when creating user {result.Errors.FirstOrDefault()?.Description}");
-            }
-        }
-        public async Task VerifyOtp(ConfirmOTPModel model, bool isResetPassword)
-        {
-            string cacheKey = isResetPassword ? $"OTPResetPassword_{model.Email}" : $"OTP_{model.Email}";
-            if (memoryCache.TryGetValue(cacheKey, out string storedOtp))
-            {
-                if (storedOtp == model.OTP)
-                {
-                    ApplicationUser? user = await userManager.FindByEmailAsync(model.Email);
-                    string? token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    await userManager.ConfirmEmailAsync(user, token);
-
-                    memoryCache.Remove(cacheKey);
-                }
-                else
-                {
-                    throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "OTP không hợp lệ");
-                }
-            }
-            else
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "OTP không hợp lệ hoặc đã hết hạn");
-            }
-        }
-
-        public async Task ResendConfirmationEmail(EmailModelView emailModelView)
-        {
-            string OTP = GenerateOtp();
-            string cacheKey = $"OTP_{emailModelView.Email}";
-            if (memoryCache.TryGetValue(cacheKey, out string cachedValue))
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "OTP đã được gửi, vui lòng kiểm tra email của bạn để xác nhận tài khoản của bạn");
-            }
-            memoryCache.Set(cacheKey, OTP, TimeSpan.FromMinutes(1));
-            await emailService.SendEmailAsync(emailModelView.Email, "Xác nhận tài khoản",
-                       $"Vui lòng xác nhận tài khoản của bạn, OTP của bạn là:  <div class='otp'>{OTP}</div>");
-        }
         public async Task ChangePassword(ChangePasswordModel model)
         {
             string? userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
@@ -238,8 +168,6 @@ namespace DoAnChuyenNganh.Services.Service
                 }
             };
         }
-
-
         public async Task ForgotPassword(EmailModelView emailModelView)
         {
             ApplicationUser? user = await userManager.FindByEmailAsync(emailModelView.Email)
@@ -253,21 +181,6 @@ namespace DoAnChuyenNganh.Services.Service
             memoryCache.Set(cacheKey, OTP, TimeSpan.FromMinutes(1));
             await emailService.SendEmailAsync(emailModelView.Email, "Đặt lại mật khẩu",
                        $"Vui lòng xác nhận tài khoản của bạn, OTP của bạn là:  <div class='otp'>{OTP}</div>");
-        }
-        public async Task ResetPassword(ResetPasswordModel resetPasswordModel)
-        {
-            ApplicationUser? user = await userManager.FindByEmailAsync(resetPasswordModel.Email)
-             ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, "Không tìm thấy user");
-            if (!await userManager.IsEmailConfirmedAsync(user))
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Vui lòng kiểm tra email của bạn");
-            }
-            string? token = await userManager.GeneratePasswordResetTokenAsync(user);
-            IdentityResult? result = await userManager.ResetPasswordAsync(user, token, resetPasswordModel.Password);
-            if (!result.Succeeded)
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, result.Errors.FirstOrDefault()?.Description);
-            }
         }
         #endregion
     }

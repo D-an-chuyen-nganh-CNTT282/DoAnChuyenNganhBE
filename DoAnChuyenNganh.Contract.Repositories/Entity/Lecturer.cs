@@ -1,10 +1,4 @@
 ﻿using DoAnChuyenNganh.Core.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoAnChuyenNganh.Contract.Repositories.Entity
 {
@@ -26,7 +20,6 @@ namespace DoAnChuyenNganh.Contract.Repositories.Entity
         public virtual ICollection<Alumni> Alumni { get; set; } = new List<Alumni>();
         public virtual ICollection<TeachingSchedule> TeachingSchedule { get; set; } = new List<TeachingSchedule>();
         public virtual ICollection<Student> Student { get; set; } = new List<Student>();
-        public virtual ICollection<LecturerActivities> LecturerActivities { get; set; } = new List<LecturerActivities>();
         public virtual ICollection<Business> Business { get; set; } = new List<Business>();
         public virtual ICollection<LecturerPlan> LecturerPlan { get; set; } = new List<LecturerPlan>();
     }

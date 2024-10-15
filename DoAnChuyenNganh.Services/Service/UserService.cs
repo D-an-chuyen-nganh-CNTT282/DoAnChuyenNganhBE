@@ -170,6 +170,8 @@ namespace DoAnChuyenNganh.Services.Service
 
             userExists.UserName = model.Email;
             userExists.LastUpdatedBy = handleBy;
+            await emailService.SendEmailAsync(model.Email, "Cấp lại mật khẩu",
+                $"Mật khẩu của bạn là: {model.Password}");
 
             if (!string.IsNullOrEmpty(model.Password))
             {
@@ -282,10 +284,8 @@ namespace DoAnChuyenNganh.Services.Service
                     RoleName = u.UserRoles.FirstOrDefault().Role.Name,
                     CreatedBy = u.CreatedBy,
                     LastUpdatedBy = u.LastUpdatedBy,
-                    DeletedBy = u.DeletedBy,
                     CreatedTime = u.CreatedTime,
                     LastUpdatedTime = u.LastUpdatedTime,
-                    DeletedTime = u.DeletedTime
                 })
                 .ToListAsync();
 

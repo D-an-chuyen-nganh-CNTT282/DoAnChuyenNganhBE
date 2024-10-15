@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using DoAnChuyenNganh.Services.Mapping;
 using DoAnChuyenNganh.Services.EmailSettings;
 using DoAnChuyenNganh.Services.Configs;
@@ -107,8 +105,13 @@ namespace DoAnChuyenNganhBE.API
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ILecturerService, LecturerService>();
+            services.AddScoped<ILecturerPlanService, LecturerPlanService>();
+            services.AddScoped<ILecturerActivitiesService, LecturerActivitiesService>();
+            services.AddScoped<IActivitiesService, ActivitiesService>();
+            services.AddScoped<ITeachingScheduleService, TeachingScheduleService>();
             services.AddHttpContextAccessor();
             services.AddScoped<DepartmentManager>();
+            services.AddScoped<LecturerManager>();
         }
         public static void AddAutoMapperConfig(this IServiceCollection services)
         {

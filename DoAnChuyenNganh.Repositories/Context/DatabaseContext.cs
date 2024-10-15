@@ -80,36 +80,94 @@ namespace DoAnChuyenNganh.Repositories.Context
             modelBuilder.Entity<ApplicationUserTokens>()
                 .HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
 
-            // Cấu hình khóa chính tổng hợp cho CongTyCuuSinhVien
-            modelBuilder.Entity<AlumniCompany>()
-                .HasKey(cs => new { cs.AlumniId, cs.CompanyId });
-
-            // Cấu hình quan hệ với CuuSinhVien
-            modelBuilder.Entity<AlumniCompany>()
-                .HasOne(cs => cs.Alumni)
-                .WithMany() // Không cần thuộc tính điều hướng ngược lại trong CuuSinhVien
-                .HasForeignKey(cs => cs.AlumniId)
-                .OnDelete(DeleteBehavior.Restrict); // Tránh cascade xóa gây ra nhiều đường dẫn cascade
-
-            // Cấu hình quan hệ với CongTy
-            modelBuilder.Entity<AlumniCompany>()
-                .HasOne(cs => cs.Company)
-                .WithMany() // Không cần thuộc tính điều hướng ngược lại trong CongTy
-                .HasForeignKey(cs => cs.CompanyId)
-                .OnDelete(DeleteBehavior.Restrict); // Tránh cascade xóa gây ra nhiều đường dẫn cascade
-                                                    // Quan hệ với bảng SinhVien
             modelBuilder.Entity<InternshipManagement>()
                 .HasOne(q => q.Student)
                 .WithMany(s => s.InternshipManagement)
                 .HasForeignKey(q => q.StudentId)
-                .OnDelete(DeleteBehavior.Restrict); // Hoặc DeleteBehavior.NoAction
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Quan hệ với bảng DoanhNghiep
             modelBuilder.Entity<InternshipManagement>()
                 .HasOne(q => q.Business)
                 .WithMany(d => d.InternshipManagement)
                 .HasForeignKey(q => q.BusinessId)
-                .OnDelete(DeleteBehavior.Restrict); // Hoặc DeleteBehavior.NoAction
+                .OnDelete(DeleteBehavior.Restrict);
+
+            #region CompositeKey
+            modelBuilder.Entity<AlumniCompany>()
+                .HasKey(cs => new { cs.Id, cs.AlumniId, cs.CompanyId });
+
+            modelBuilder.Entity<AlumniCompany>()
+                .HasOne(cs => cs.Alumni)
+                .WithMany() 
+                .HasForeignKey(cs => cs.AlumniId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<AlumniCompany>()
+                .HasOne(cs => cs.Company)
+                .WithMany() 
+                .HasForeignKey(cs => cs.CompanyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AlumniActivities>()
+                .HasKey(cs => new { cs.Id, cs.AlumniId, cs.ActivitiesId });
+
+            modelBuilder.Entity<AlumniActivities>()
+                .HasOne(cs => cs.Alumni)
+                .WithMany()
+                .HasForeignKey(cs => cs.AlumniId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AlumniActivities>()
+                .HasOne(cs => cs.Activities)
+                .WithMany()
+                .HasForeignKey(cs => cs.ActivitiesId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LecturerActivities>()
+                .HasKey(cs => new { cs.Id, cs.LecturerId, cs.ActivitiesId });
+
+            modelBuilder.Entity<LecturerActivities>()
+                .HasOne(cs => cs.Lecturer)
+                .WithMany()
+                .HasForeignKey(cs => cs.LecturerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LecturerActivities>()
+                .HasOne(cs => cs.Activities)
+                .WithMany()
+                .HasForeignKey(cs => cs.ActivitiesId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ExtracurricularActivities>()
+                .HasKey(cs => new { cs.Id, cs.StudentId, cs.ActivitiesId });
+
+            modelBuilder.Entity<ExtracurricularActivities>()
+                .HasOne(cs => cs.Student)
+                .WithMany()
+                .HasForeignKey(cs => cs.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ExtracurricularActivities>()
+                .HasOne(cs => cs.Activities)
+                .WithMany()
+                .HasForeignKey(cs => cs.ActivitiesId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BusinessActivities>()
+                .HasKey(cs => new { cs.Id, cs.BusinessId, cs.ActivitiesId });
+
+            modelBuilder.Entity<BusinessActivities>()
+                .HasOne(cs => cs.Business)
+                .WithMany()
+                .HasForeignKey(cs => cs.BusinessId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BusinessActivities>()
+                .HasOne(cs => cs.Activities)
+                .WithMany()
+                .HasForeignKey(cs => cs.ActivitiesId)
+                .OnDelete(DeleteBehavior.Restrict);
+            #endregion
         }
     }
 }

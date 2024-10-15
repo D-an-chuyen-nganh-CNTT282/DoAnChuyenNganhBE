@@ -7,9 +7,7 @@ using DoAnChuyenNganh.Core.Store;
 using DoAnChuyenNganh.Core.Utils;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
-using DoAnChuyenNganh.Repositories.Entity;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -107,10 +105,8 @@ namespace DoAnChuyenNganh.Services.Service
                     PersonalWebsiteLink = lecturer.PersonalWebsiteLink,
                     CreatedBy = lecturer.CreatedBy,
                     LastUpdatedBy = lecturer.LastUpdatedBy,
-                    DeletedBy = lecturer.DeletedBy,
                     CreatedTime = lecturer.CreatedTime,
                     LastUpdatedTime = lecturer.LastUpdatedTime,
-                    DeletedTime = lecturer.DeletedTime
                 })
                 .ToListAsync();
 
@@ -118,7 +114,7 @@ namespace DoAnChuyenNganh.Services.Service
         }
         public async Task<BasePaginatedList<LecturerResponseDTO>> GetLecturers(string? id, string? name, int pageIndex, int pageSize)
         {
-            IQueryable<Lecturer>? query = _unitOfWork.GetRepository<Lecturer>().Entities;
+            IQueryable<Lecturer>? query = _unitOfWork.GetRepository<Lecturer>().Entities.Where(l => l.DeletedTime == null);
             if (!string.IsNullOrWhiteSpace(id))
             {
                 query = query.Where(lecturer => lecturer.Id == id);

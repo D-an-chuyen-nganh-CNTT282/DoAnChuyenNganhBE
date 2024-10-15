@@ -3,7 +3,6 @@ using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoAnChuyenNganhBE.API.Controllers
@@ -17,6 +16,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         {
             _lecturerService = lecturerService;
         }
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn")]
         [HttpGet]
         public async Task<IActionResult> GetLecturers(string? id, string? name, int index = 1, int pageSize = 10)
         {

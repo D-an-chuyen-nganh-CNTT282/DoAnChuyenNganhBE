@@ -3,11 +3,6 @@ using DoAnChuyenNganh.Repositories.Entity;
 using DoAnChuyenNganh.Services.Configs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoAnChuyenNganh.Contract.Services.Configs
 {
@@ -18,6 +13,7 @@ namespace DoAnChuyenNganh.Contract.Services.Configs
             UserManager<ApplicationUser> userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             RoleManager<ApplicationRole> roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
             DepartmentManager departmentManager = serviceProvider.GetRequiredService<DepartmentManager>();
+            LecturerManager lecturerManager = serviceProvider.GetRequiredService<LecturerManager>();
 
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
@@ -157,6 +153,12 @@ namespace DoAnChuyenNganh.Contract.Services.Configs
             await departmentManager.CreateIfNotExistsAsync("Đoàn thanh niên - Hội sinh viên");
             await departmentManager.CreateIfNotExistsAsync("Hội đồng Khoa học - Đào tạo");
             await departmentManager.CreateIfNotExistsAsync("Hội đồng CDGS");
+            //Seed data lecturer
+            await lecturerManager.CreateIfNotExistsAsync("Trưởng khoa", "1970-06-22 00:00", "Nam", "tk@gmail.com", "0938747828", "TP HCM", "Khoa học máy tính & Trí tuệ nhân tạo", null);
+            await lecturerManager.CreateIfNotExistsAsync("Phó trưởng khoa", "1972-08-10 00:00", "Nam", "ptk@gmail.com", "0934758373", "TP HCM", "Công nghệ phần mềm", null);
+            await lecturerManager.CreateIfNotExistsAsync("Trưởng bộ môn", "1974-07-15 00:00", "Nữ", "tbm@gmail.com", "0823747839", "TP HCM", "Mạng máy tính", null);
+            await lecturerManager.CreateIfNotExistsAsync("Giảng viên", "1980-05-25 00:00", "Nam", "gv@gmail.com", "0928747828", "TP HCM", "Hệ thống thông tin", null);
+            await lecturerManager.CreateIfNotExistsAsync("Giáo vụ khoa", "1986-12-21 00:00", "Nữ", "gvk@gmail.com", "0987263717", "TP HCM", "Công nghệ phần mềm", null);
         }
     }
 }

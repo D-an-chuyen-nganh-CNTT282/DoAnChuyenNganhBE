@@ -29,7 +29,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
             return Ok(BaseResponse<object>.OkResponse("Update user successfully"));
         }
 
-        [HttpPatch("Admin_Update")]
+        [HttpPatch("Reset_Password_User")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUserByAdmin([FromQuery] string userId, [FromBody] UserUpdateByAdminModel userModel)
         {

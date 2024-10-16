@@ -109,6 +109,9 @@ namespace DoAnChuyenNganhBE.API
             services.AddScoped<ILecturerActivitiesService, LecturerActivitiesService>();
             services.AddScoped<IActivitiesService, ActivitiesService>();
             services.AddScoped<ITeachingScheduleService, TeachingScheduleService>();
+            services.AddScoped<IBusinessService, BusinessService>();
+            services.AddScoped<IBusinessCollaborationService, BusinessCollaborationService>();
+            services.AddScoped<IBusinessActivitesService, BusinessActivitiesService>();
             services.AddHttpContextAccessor();
             services.AddScoped<DepartmentManager>();
             services.AddScoped<LecturerManager>();

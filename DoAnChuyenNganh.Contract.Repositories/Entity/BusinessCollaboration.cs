@@ -7,13 +7,13 @@ namespace DoAnChuyenNganh.Contract.Repositories.Entity
     {
         public enum ProjectStatus
         {
-            UnderDiscussion,
-            PendingApproval,
-            Approved,
-            InProgress,
-            OnHold,
-            Completed,
-            Ended
+            UnderDiscussion, //Đang thảo luận
+            PendingApproval, //Chờ phê duyệt
+            Approved, //Phê duyệt
+            InProgress, //Đang tiến hành
+            OnHold, //Tạm hoãn
+            Completed, //Hoàn thành
+            Ended //Kết thúc
         }
         public string BusinessId { get; set; }
 

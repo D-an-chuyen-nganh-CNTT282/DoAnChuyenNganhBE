@@ -102,10 +102,10 @@ namespace DoAnChuyenNganh.Services.Service
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Bạn không có quyền truy cập kế hoạch này!");
             }
             _mapper.Map(lecturerPlanModelView, lecturerPlan);
-            lecturerPlan.LecturerId = lecturer.Id;
-            lecturerPlan.UserId = Guid.Parse(UserId);
             lecturerPlan.LastUpdatedBy = UserId;
             lecturerPlan.LastUpdatedTime = CoreHelper.SystemTimeNow;
+            lecturerPlan.UserId = Guid.Parse(UserId);
+            lecturerPlan.LecturerId = lecturer.Id;
             await _unitOfWork.GetRepository<LecturerPlan>().UpdateAsync(lecturerPlan);
             await _unitOfWork.SaveAsync();
         }

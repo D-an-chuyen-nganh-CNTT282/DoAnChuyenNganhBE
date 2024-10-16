@@ -1,14 +1,16 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace DoAnChuyenNganh.ModelViews.ResponseDTO
 {
-    public class LecturerPlanResponseDTO
+    public class BusinessActivitiesResponseDTO
     {
         public string Id { get; set; }
-        public string LecturerId { get; set; }
-        public required string PlanContent { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public string? Note { get; set; }
+        public string BusinessId { get; set; }
+        public string ActivitiesId { get; set; }
         public string? CreatedBy { get; set; }
         public string? LastUpdatedBy { get; set; }
         public DateTimeOffset CreatedTime { get; set; }

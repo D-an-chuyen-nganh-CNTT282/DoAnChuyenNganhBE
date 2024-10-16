@@ -58,6 +58,7 @@ namespace DoAnChuyenNganh.Services.Service
             }
             teachingSchedule.DeletedBy = UserId;
             teachingSchedule.DeletedTime = CoreHelper.SystemTimeNow;
+            teachingSchedule.UserId = Guid.Parse(UserId);
             await _unitOfWork.GetRepository<TeachingSchedule>().UpdateAsync(teachingSchedule);
             await _unitOfWork.SaveAsync();
         }

@@ -2,6 +2,9 @@
 using DoAnChuyenNganh.Contract.Repositories.Entity;
 using DoAnChuyenNganh.ModelViews.ActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.AuthModelViews;
+using DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews;
+using DoAnChuyenNganh.ModelViews.BusinessCollaborationModelViews;
+using DoAnChuyenNganh.ModelViews.BusinessModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerPlanModelViews;
@@ -34,10 +37,8 @@ namespace DoAnChuyenNganh.Services.Mapping
             CreateMap<Lecturer, LecturerModelView>().ReverseMap();
             CreateMap<LecturerResponseDTO, Lecturer>().ReverseMap();
 
-            CreateMap<LecturerPlan, LecturerPlanModelView>().ReverseMap()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore()); //Bỏ qua UserId khi map
-            CreateMap<LecturerPlanResponseDTO, LecturerPlan>().ReverseMap()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore());
+            CreateMap<LecturerPlan, LecturerPlanModelView>().ReverseMap();
+            CreateMap<LecturerPlanResponseDTO, LecturerPlan>().ReverseMap();
 
 
             CreateMap<LecturerActivities, LecturerActivitiesModelView>().ReverseMap();
@@ -46,10 +47,17 @@ namespace DoAnChuyenNganh.Services.Mapping
             CreateMap<Activities, ActivitiesModelView>().ReverseMap();
             CreateMap<ActivitiesResponseDTO, Activities>().ReverseMap();
 
-            CreateMap<TeachingSchedule, TeachingScheduleModelView>().ReverseMap()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore());
-            CreateMap<TeachingScheduleResponseDTO, TeachingSchedule>().ReverseMap()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore());
+            CreateMap<TeachingSchedule, TeachingScheduleModelView>().ReverseMap();
+            CreateMap<TeachingScheduleResponseDTO, TeachingSchedule>().ReverseMap();
+
+            CreateMap<Business, BusinessModelView>().ReverseMap();
+            CreateMap<BusinessResponseDTO, Business>().ReverseMap();
+
+            CreateMap<BusinessCollaboration, BusinessCollaborationModelView>().ReverseMap();
+            CreateMap<BusinessCollaborationResponseDTO, BusinessCollaboration>().ReverseMap();
+
+            CreateMap<BusinessActivities, BusinessActivitiesModelView>().ReverseMap();
+            CreateMap<BusinessActivitiesResponseDTO, BusinessActivities>().ReverseMap();
         }
     }
 }

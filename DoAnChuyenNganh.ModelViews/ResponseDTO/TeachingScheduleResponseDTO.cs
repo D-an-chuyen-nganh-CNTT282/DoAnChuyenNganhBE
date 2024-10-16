@@ -4,7 +4,6 @@ namespace DoAnChuyenNganh.ModelViews.ResponseDTO
     public class TeachingScheduleResponseDTO
     {
         public string Id { get; set; }
-        public Guid UserId { get; set; }
         public required string LecturerId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

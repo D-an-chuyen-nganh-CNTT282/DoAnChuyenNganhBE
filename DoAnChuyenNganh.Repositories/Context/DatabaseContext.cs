@@ -80,18 +80,6 @@ namespace DoAnChuyenNganh.Repositories.Context
             modelBuilder.Entity<ApplicationUserTokens>()
                 .HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
 
-            modelBuilder.Entity<InternshipManagement>()
-                .HasOne(q => q.Student)
-                .WithMany(s => s.InternshipManagement)
-                .HasForeignKey(q => q.StudentId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<InternshipManagement>()
-                .HasOne(q => q.Business)
-                .WithMany(d => d.InternshipManagement)
-                .HasForeignKey(q => q.BusinessId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             #region CompositeKey
             modelBuilder.Entity<AlumniCompany>()
                 .HasKey(cs => new { cs.Id, cs.AlumniId, cs.CompanyId });
@@ -166,6 +154,21 @@ namespace DoAnChuyenNganh.Repositories.Context
                 .HasOne(cs => cs.Activities)
                 .WithMany()
                 .HasForeignKey(cs => cs.ActivitiesId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<InternshipManagement>()
+                .HasKey(cs => new { cs.Id, cs.StudentId, cs.BusinessId });
+
+            modelBuilder.Entity<InternshipManagement>()
+                .HasOne(cs => cs.Student)
+                .WithMany()
+                .HasForeignKey(cs => cs.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<InternshipManagement>()
+                .HasOne(cs => cs.Business)
+                .WithMany()
+                .HasForeignKey(cs => cs.BusinessId)
                 .OnDelete(DeleteBehavior.Restrict);
             #endregion
         }

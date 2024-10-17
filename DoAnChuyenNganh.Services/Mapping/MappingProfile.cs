@@ -5,6 +5,7 @@ using DoAnChuyenNganh.ModelViews.AuthModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessCollaborationModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessModelViews;
+using DoAnChuyenNganh.ModelViews.InternshipMangamentModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerPlanModelViews;
@@ -58,6 +59,9 @@ namespace DoAnChuyenNganh.Services.Mapping
 
             CreateMap<BusinessActivities, BusinessActivitiesModelView>().ReverseMap();
             CreateMap<BusinessActivitiesResponseDTO, BusinessActivities>().ReverseMap();
+
+            CreateMap<InternshipManagement, InternshipManagementModelView>().ReverseMap();
+            CreateMap<InternshipManagementResponseDTO, InternshipManagement>().ReverseMap();
         }
     }
 }

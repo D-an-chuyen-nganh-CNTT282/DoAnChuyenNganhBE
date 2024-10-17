@@ -6,11 +6,33 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DoAnChuyenNganh.Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class DbInit : Migration
+    public partial class DbInitComplete : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Activities",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventTypes = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastUpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastUpdatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Activities", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Department",
                 columns: table => new
@@ -111,12 +133,8 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LecturerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GiangVienId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    LecturerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ActivitiesId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastUpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -126,12 +144,19 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LecturerActivities", x => x.Id);
+                    table.PrimaryKey("PK_LecturerActivities", x => new { x.Id, x.LecturerId, x.ActivitiesId });
                     table.ForeignKey(
-                        name: "FK_LecturerActivities_Lecturer_GiangVienId",
-                        column: x => x.GiangVienId,
+                        name: "FK_LecturerActivities_Activities_ActivitiesId",
+                        column: x => x.ActivitiesId,
+                        principalTable: "Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LecturerActivities_Lecturer_LecturerId",
+                        column: x => x.LecturerId,
                         principalTable: "Lecturer",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -304,8 +329,8 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IncomingDocumentTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IncomingDocumentContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReceivedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DepartmentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FileScanUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -343,7 +368,7 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LecturerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PlanContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -376,8 +401,8 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OutgoingDocumentTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OutgoingDocumentContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SendDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DepartmentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -558,8 +583,7 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ActivitiesId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastUpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -569,13 +593,19 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExtracurricularActivities", x => x.Id);
+                    table.PrimaryKey("PK_ExtracurricularActivities", x => new { x.Id, x.StudentId, x.ActivitiesId });
+                    table.ForeignKey(
+                        name: "FK_ExtracurricularActivities_Activities_ActivitiesId",
+                        column: x => x.ActivitiesId,
+                        principalTable: "Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ExtracurricularActivities_Student_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Student",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -620,8 +650,7 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AlumniId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ActivityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ActivitiesId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastUpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -631,13 +660,19 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AlumniActivities", x => x.Id);
+                    table.PrimaryKey("PK_AlumniActivities", x => new { x.Id, x.AlumniId, x.ActivitiesId });
+                    table.ForeignKey(
+                        name: "FK_AlumniActivities_Activities_ActivitiesId",
+                        column: x => x.ActivitiesId,
+                        principalTable: "Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AlumniActivities_Alumni_AlumniId",
                         column: x => x.AlumniId,
                         principalTable: "Alumni",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -645,11 +680,8 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BusinessId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ActivitiesId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastUpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -659,13 +691,19 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BusinessActivities", x => x.Id);
+                    table.PrimaryKey("PK_BusinessActivities", x => new { x.Id, x.BusinessId, x.ActivitiesId });
+                    table.ForeignKey(
+                        name: "FK_BusinessActivities_Activities_ActivitiesId",
+                        column: x => x.ActivitiesId,
+                        principalTable: "Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BusinessActivities_Business_BusinessId",
                         column: x => x.BusinessId,
                         principalTable: "Business",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -715,7 +753,7 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InternshipManagement", x => x.Id);
+                    table.PrimaryKey("PK_InternshipManagement", x => new { x.Id, x.StudentId, x.BusinessId });
                     table.ForeignKey(
                         name: "FK_InternshipManagement_Business_BusinessId",
                         column: x => x.BusinessId,
@@ -734,12 +772,12 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 name: "AlumniCompany",
                 columns: table => new
                 {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AlumniId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CompanyId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Duty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Duty = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastUpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -749,7 +787,7 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AlumniCompany", x => new { x.AlumniId, x.CompanyId });
+                    table.PrimaryKey("PK_AlumniCompany", x => new { x.Id, x.AlumniId, x.CompanyId });
                     table.ForeignKey(
                         name: "FK_AlumniCompany_Alumni_AlumniId",
                         column: x => x.AlumniId,
@@ -775,8 +813,18 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AlumniActivities_ActivitiesId",
+                table: "AlumniActivities",
+                column: "ActivitiesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AlumniActivities_AlumniId",
                 table: "AlumniActivities",
+                column: "AlumniId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AlumniCompany_AlumniId",
+                table: "AlumniCompany",
                 column: "AlumniId");
 
             migrationBuilder.CreateIndex(
@@ -795,6 +843,11 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BusinessActivities_ActivitiesId",
+                table: "BusinessActivities",
+                column: "ActivitiesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BusinessActivities_BusinessId",
                 table: "BusinessActivities",
                 column: "BusinessId");
@@ -808,6 +861,11 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 name: "IX_Company_UserId",
                 table: "Company",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExtracurricularActivities_ActivitiesId",
+                table: "ExtracurricularActivities",
+                column: "ActivitiesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExtracurricularActivities_StudentId",
@@ -835,9 +893,14 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LecturerActivities_GiangVienId",
+                name: "IX_LecturerActivities_ActivitiesId",
                 table: "LecturerActivities",
-                column: "GiangVienId");
+                column: "ActivitiesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LecturerActivities_LecturerId",
+                table: "LecturerActivities",
+                column: "LecturerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LecturerPlan_LecturerId",
@@ -962,6 +1025,9 @@ namespace DoAnChuyenNganh.Repositories.Migrations
 
             migrationBuilder.DropTable(
                 name: "Business");
+
+            migrationBuilder.DropTable(
+                name: "Activities");
 
             migrationBuilder.DropTable(
                 name: "Department");

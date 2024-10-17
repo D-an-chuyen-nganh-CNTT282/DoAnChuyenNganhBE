@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoAnChuyenNganh.Repositories.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241013204505_UpdateDb")]
-    partial class UpdateDb
+    [Migration("20241017154622_DbInitComplete")]
+    partial class DbInitComplete
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,51 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.Activities", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DeletedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EventTypes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Activities");
+                });
 
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.Alumni", b =>
                 {
@@ -110,12 +155,10 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ActivityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("AlumniId")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ActivitiesId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
@@ -130,16 +173,15 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime>("EventDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id", "AlumniId", "ActivitiesId");
+
+                    b.HasIndex("ActivitiesId");
 
                     b.HasIndex("AlumniId");
 
@@ -148,13 +190,14 @@ namespace DoAnChuyenNganh.Repositories.Migrations
 
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.AlumniCompany", b =>
                 {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("AlumniId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnOrder(1);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CompanyId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnOrder(2);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -169,13 +212,11 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Duty")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -186,7 +227,9 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("AlumniId", "CompanyId");
+                    b.HasKey("Id", "AlumniId", "CompanyId");
+
+                    b.HasIndex("AlumniId");
 
                     b.HasIndex("CompanyId");
 
@@ -483,7 +526,9 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("BusinessId")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ActivitiesId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
@@ -498,27 +543,15 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EventDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Id", "BusinessId", "ActivitiesId");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
+                    b.HasIndex("ActivitiesId");
 
                     b.HasIndex("BusinessId");
 
@@ -655,6 +688,12 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ActivitiesId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -667,24 +706,15 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime>("EventDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Id", "StudentId", "ActivitiesId");
 
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
+                    b.HasIndex("ActivitiesId");
 
                     b.HasIndex("StudentId");
 
@@ -756,8 +786,10 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("BusinessId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
@@ -791,11 +823,7 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
+                    b.HasKey("Id", "StudentId", "BusinessId");
 
                     b.HasIndex("BusinessId");
 
@@ -867,6 +895,12 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("LecturerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ActivitiesId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -879,36 +913,17 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Property<DateTimeOffset?>("DeletedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EventDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GiangVienId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("LastUpdatedTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("LecturerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Id", "LecturerId", "ActivitiesId");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("ActivitiesId");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GiangVienId");
+                    b.HasIndex("LecturerId");
 
                     b.ToTable("LecturerActivities");
                 });
@@ -1302,11 +1317,19 @@ namespace DoAnChuyenNganh.Repositories.Migrations
 
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.AlumniActivities", b =>
                 {
-                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Alumni", "Alumni")
-                        .WithMany("AlumniActivities")
-                        .HasForeignKey("AlumniId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Activities", "Activities")
+                        .WithMany()
+                        .HasForeignKey("ActivitiesId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Alumni", "Alumni")
+                        .WithMany()
+                        .HasForeignKey("AlumniId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Activities");
 
                     b.Navigation("Alumni");
                 });
@@ -1414,11 +1437,19 @@ namespace DoAnChuyenNganh.Repositories.Migrations
 
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.BusinessActivities", b =>
                 {
-                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Business", "Business")
-                        .WithMany("BusinessActivities")
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Activities", "Activities")
+                        .WithMany()
+                        .HasForeignKey("ActivitiesId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Business", "Business")
+                        .WithMany()
+                        .HasForeignKey("BusinessId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Activities");
 
                     b.Navigation("Business");
                 });
@@ -1447,11 +1478,19 @@ namespace DoAnChuyenNganh.Repositories.Migrations
 
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.ExtracurricularActivities", b =>
                 {
-                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Student", "Student")
-                        .WithMany("ExtracurricularActivities")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Activities", "Activities")
+                        .WithMany()
+                        .HasForeignKey("ActivitiesId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Activities");
 
                     b.Navigation("Student");
                 });
@@ -1478,13 +1517,13 @@ namespace DoAnChuyenNganh.Repositories.Migrations
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.InternshipManagement", b =>
                 {
                     b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Business", "Business")
-                        .WithMany("InternshipManagement")
+                        .WithMany()
                         .HasForeignKey("BusinessId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Student", "Student")
-                        .WithMany("InternshipManagement")
+                        .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1496,9 +1535,19 @@ namespace DoAnChuyenNganh.Repositories.Migrations
 
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.LecturerActivities", b =>
                 {
+                    b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Activities", "Activities")
+                        .WithMany()
+                        .HasForeignKey("ActivitiesId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("DoAnChuyenNganh.Contract.Repositories.Entity.Lecturer", "Lecturer")
-                        .WithMany("LecturerActivities")
-                        .HasForeignKey("GiangVienId");
+                        .WithMany()
+                        .HasForeignKey("LecturerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Activities");
 
                     b.Navigation("Lecturer");
                 });
@@ -1590,11 +1639,6 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.Alumni", b =>
-                {
-                    b.Navigation("AlumniActivities");
-                });
-
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.ApplicationRole", b =>
                 {
                     b.Navigation("UserRoles");
@@ -1602,11 +1646,7 @@ namespace DoAnChuyenNganh.Repositories.Migrations
 
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.Business", b =>
                 {
-                    b.Navigation("BusinessActivities");
-
                     b.Navigation("BusinessCollaboration");
-
-                    b.Navigation("InternshipManagement");
                 });
 
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.Lecturer", b =>
@@ -1614,8 +1654,6 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     b.Navigation("Alumni");
 
                     b.Navigation("Business");
-
-                    b.Navigation("LecturerActivities");
 
                     b.Navigation("LecturerPlan");
 
@@ -1626,10 +1664,6 @@ namespace DoAnChuyenNganh.Repositories.Migrations
 
             modelBuilder.Entity("DoAnChuyenNganh.Contract.Repositories.Entity.Student", b =>
                 {
-                    b.Navigation("ExtracurricularActivities");
-
-                    b.Navigation("InternshipManagement");
-
                     b.Navigation("StudentExpectations");
                 });
 

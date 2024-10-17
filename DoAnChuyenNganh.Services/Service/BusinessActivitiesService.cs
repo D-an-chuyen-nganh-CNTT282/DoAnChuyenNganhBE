@@ -104,9 +104,9 @@ namespace DoAnChuyenNganh.Services.Service
             await _unitOfWork.SaveAsync();
         }
         private async Task<BasePaginatedList<BusinessActivitiesResponseDTO>> PaginateBusinessActivities(
-       IQueryable<BusinessActivities> query,
-       int? pageIndex,
-       int? pageSize)
+        IQueryable<BusinessActivities> query,
+        int? pageIndex,
+        int? pageSize)
         {
             int currentPage = pageIndex ?? 1;
             int currentPageSize = pageSize ?? 10;

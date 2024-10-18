@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoAnChuyenNganh.Repositories.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241017154622_DbInitComplete")]
-    partial class DbInitComplete
+    [Migration("20241018031817_DbInit")]
+    partial class DbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1018,6 +1018,10 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("OutgoingDocumentTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

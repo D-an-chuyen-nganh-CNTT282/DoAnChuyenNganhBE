@@ -1,5 +1,6 @@
 ﻿using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.Repositories.Entity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DoAnChuyenNganh.Contract.Repositories.Entity
@@ -13,17 +14,13 @@ namespace DoAnChuyenNganh.Contract.Repositories.Entity
             Overdue
         }
         public string OutgoingDocumentTitle { get; set; }
-
         public string OutgoingDocumentContent { get; set; }
-
         public DateTime SendDate { get; set; }
-
         public string DepartmentId { get; set; }
-
+        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
+        public string RecipientEmail {  get; set; }
         public required Guid UserId { get; set; }
-
         public required OutgoingDocumentProcessingStatus OutgoingDocumentProcessingStatuss { get; set; }
-
         public DateTime DueDate { get; set; }
         [ForeignKey("DepartmentId")]
         public virtual Department Department { get; set; } = null!;

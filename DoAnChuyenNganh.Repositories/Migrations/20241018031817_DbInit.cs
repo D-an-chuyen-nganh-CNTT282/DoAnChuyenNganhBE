@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DoAnChuyenNganh.Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class DbInitComplete : Migration
+    public partial class DbInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -405,6 +405,7 @@ namespace DoAnChuyenNganh.Repositories.Migrations
                     OutgoingDocumentContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SendDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DepartmentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RecipientEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OutgoingDocumentProcessingStatuss = table.Column<int>(type: "int", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),

@@ -5,6 +5,7 @@ using DoAnChuyenNganh.ModelViews.AuthModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessCollaborationModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessModelViews;
+using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
 using DoAnChuyenNganh.ModelViews.InternshipMangamentModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
@@ -21,9 +22,11 @@ namespace DoAnChuyenNganh.Services.Mapping
     {
         public MappingProfile()
         {
+            CreateMap<IncomingDocumentModelViews, IncomingDocument>().ReverseMap();
+
             CreateMap<UserUpdateByAdminModel, ApplicationUser>()
                 .ForMember(x => x.PasswordHash, option => option.Ignore());
-
+            CreateMap<IncomingDocument, IncomingDocumentResponseDTO>().ReverseMap();
             CreateMap<ApplicationUser, UserProfileResponseModelView>().ReverseMap();
 
             CreateMap<UserModelView, ApplicationUser>()

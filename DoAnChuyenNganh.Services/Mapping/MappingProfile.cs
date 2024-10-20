@@ -5,15 +5,19 @@ using DoAnChuyenNganh.ModelViews.AuthModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessCollaborationModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessModelViews;
+using DoAnChuyenNganh.ModelViews.ExtracurricularActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.InternshipMangamentModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerModelViews;
 using DoAnChuyenNganh.ModelViews.LecturerPlanModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using DoAnChuyenNganh.ModelViews.RoleViewModel;
+using DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews;
+using DoAnChuyenNganh.ModelViews.StudentModelViews;
 using DoAnChuyenNganh.ModelViews.TeachingScheduleModelViews;
 using DoAnChuyenNganh.ModelViews.UserModelViews;
 using DoAnChuyenNganh.Repositories.Entity;
+using DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews;
 
 namespace DoAnChuyenNganh.Services.Mapping
 {
@@ -62,6 +66,16 @@ namespace DoAnChuyenNganh.Services.Mapping
 
             CreateMap<InternshipManagement, InternshipManagementModelView>().ReverseMap();
             CreateMap<InternshipManagementResponseDTO, InternshipManagement>().ReverseMap();
+
+            CreateMap<Student, StudentModelView>().ReverseMap();
+            CreateMap<StudentResponseDTO, Student>().ReverseMap();
+
+            CreateMap<ExtracurricularActivities, ExtracurricularActivitiesModelView>().ReverseMap();
+            CreateMap<ExtracurricularActivitiesReponseDTO, ExtracurricularActivities>().ReverseMap();
+
+            CreateMap<StudentExpectations, StudentExpectationsModelView>().ReverseMap();
+            CreateMap<StudentExpectations,StudentExpectationsResponseDTO>().ReverseMap();
+
         }
     }
 }

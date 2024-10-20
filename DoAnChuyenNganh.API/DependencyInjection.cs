@@ -113,6 +113,9 @@ namespace DoAnChuyenNganhBE.API
             services.AddScoped<IBusinessCollaborationService, BusinessCollaborationService>();
             services.AddScoped<IBusinessActivitesService, BusinessActivitiesService>();
             services.AddScoped<IInternshipManagementService, InternshipManagementService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IExtracurricularActivitiesService, ExtracurricularActivitiesService>();
+            services.AddScoped<IStudentExpectationsService, StudentExpectationsService>();
             services.AddHttpContextAccessor();
             services.AddScoped<DepartmentManager>();
             services.AddScoped<LecturerManager>();

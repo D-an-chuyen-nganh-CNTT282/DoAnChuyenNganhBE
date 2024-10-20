@@ -1,5 +1,4 @@
-﻿
-namespace DoAnChuyenNganh.ModelViews.LecturerModelViews
+﻿namespace DoAnChuyenNganh.ModelViews.LecturerModelViews
 {
     public class LecturerModelView
     {

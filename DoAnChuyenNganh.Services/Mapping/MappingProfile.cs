@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DoAnChuyenNganh.Contract.Repositories.Entity;
 using DoAnChuyenNganh.ModelViews.ActivitiesModelViews;
+using DoAnChuyenNganh.ModelViews.AlumniModelViews;
 using DoAnChuyenNganh.ModelViews.AuthModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessCollaborationModelViews;
@@ -22,12 +23,18 @@ namespace DoAnChuyenNganh.Services.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<IncomingDocumentModelViews, IncomingDocument>().ReverseMap();
 
             CreateMap<UserUpdateByAdminModel, ApplicationUser>()
                 .ForMember(x => x.PasswordHash, option => option.Ignore());
+
+            CreateMap<Alumni, AlumniResponseDTO>().ReverseMap();
+            CreateMap<AlumniModelView, Alumni>().ReverseMap();
             CreateMap<IncomingDocument, IncomingDocumentResponseDTO>().ReverseMap();
+            CreateMap<IncomingDocumentModelViews, IncomingDocument>().ReverseMap();
+
             CreateMap<ApplicationUser, UserProfileResponseModelView>().ReverseMap();
+
+
 
             CreateMap<UserModelView, ApplicationUser>()
             .ForMember(dest => dest.LastUpdatedBy, opt => opt.Ignore())

@@ -114,7 +114,7 @@ namespace DoAnChuyenNganh.Services.Service
         }
 
 
-        public async Task Update(string? id, IncomingDocumentModelViews incomingDocumentView)
+        public async Task Update(string? id, AlumniModelView alumniView)
         {
             string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrWhiteSpace(UserId))
@@ -130,7 +130,7 @@ namespace DoAnChuyenNganh.Services.Service
             Alumni? alumni = await _unitOfWork.GetRepository<Alumni>().GetByIdAsync(id)
                 ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy cựu sinh viên nào với mã {id}!");
 
-            _mapper.Map(incomingDocumentView, alumni); // Assuming the mapping exists between IncomingDocumentModelViews and Alumni
+            _mapper.Map(alumniView, alumni); // Assuming the mapping exists between IncomingDocumentModelViews and Alumni
             alumni.LastUpdatedTime = CoreHelper.SystemTimeNow;
             alumni.LastUpdatedBy = UserId;
             await _unitOfWork.GetRepository<Alumni>().UpdateAsync(alumni);

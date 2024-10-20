@@ -51,7 +51,7 @@ namespace DoAnChuyenNganh.Services.Service
             }
             if (string.IsNullOrEmpty(activitiesId))
             {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động ngoại khóa!");
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động!");
             }
             if (string.IsNullOrEmpty(studentId))
             {

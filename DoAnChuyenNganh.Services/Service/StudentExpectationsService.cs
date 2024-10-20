@@ -37,9 +37,6 @@ namespace DoAnChuyenNganh.Services.Service
 
             StudentExpectations studentExpectations = _mapper.Map<StudentExpectations>(studentExpectationsModelView);
 
-            // Gán trạng thái xử lý
-            studentExpectations.ProcessingStatuss = (StudentExpectations.ProcessingStatus)studentExpectationsModelView.Status;
-
             // Gán UserId cho đối tượng studentExpectations
             studentExpectations.UserId = Guid.Parse(userId);
             studentExpectations.CreatedBy = userId;
@@ -65,22 +62,15 @@ namespace DoAnChuyenNganh.Services.Service
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã yêu cầu của sinh viên!");
             }
 
-            StudentExpectations? oldStudentExpectations = await _unitOfWork.GetRepository<StudentExpectations>()
-                .Entities.FirstOrDefaultAsync(a => a.Id == id)
+            StudentExpectations? studentExpectations = await _unitOfWork.GetRepository<StudentExpectations>().GetByIdAsync(id)
                 ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy yêu cầu nào với mã {id}");
 
-            // Cập nhật thông tin yêu cầu sinh viên
-            oldStudentExpectations.StudentId = studentExpectationsModelView.StudentId;
-            oldStudentExpectations.RequestCategory = studentExpectationsModelView.RequestCategory;
-            oldStudentExpectations.ProcessingStatuss = (StudentExpectations.ProcessingStatus)studentExpectationsModelView.Status;
-            oldStudentExpectations.RequestDate = studentExpectationsModelView.RequestDate;
-            oldStudentExpectations.CompletionDate = studentExpectationsModelView.CompletionDate;
-            oldStudentExpectations.FileScanUrl = studentExpectationsModelView.FileScanUrl;
+            _mapper.Map(studentExpectationsModelView, studentExpectations);
+            studentExpectations.UserId = Guid.Parse(userId);
+            studentExpectations.LastUpdatedBy = userId;
+            studentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow;
 
-            oldStudentExpectations.LastUpdatedBy = userId;
-            oldStudentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow;
-
-            await _unitOfWork.GetRepository<StudentExpectations>().UpdateAsync(oldStudentExpectations);
+            await _unitOfWork.GetRepository<StudentExpectations>().UpdateAsync(studentExpectations);
             await _unitOfWork.SaveAsync();
         }
 
@@ -111,8 +101,8 @@ namespace DoAnChuyenNganh.Services.Service
                     Id = expectation.Id,
                     StudentId = expectation.StudentId,
                     RequestCategory = expectation.RequestCategory,
-                    UserId = expectation.UserId, 
-                    ProcessingStatus = (StudentExpectationsModelView.ProcessingStatus)expectation.ProcessingStatuss,
+                    UserId = expectation.UserId,
+                    ProcessingStatus = expectation.ProcessingStatuss.ToString(),
                     RequestDate = expectation.RequestDate,
                     CompletionDate = expectation.CompletionDate,
                     FileScanUrl = expectation.FileScanUrl,

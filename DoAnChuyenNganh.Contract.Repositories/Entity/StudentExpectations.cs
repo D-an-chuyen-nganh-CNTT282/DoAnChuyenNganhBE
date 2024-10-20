@@ -24,7 +24,7 @@ namespace DoAnChuyenNganh.Contract.Repositories.Entity
 
         public DateTime RequestDate { get; set; }
 
-        public DateTime CompletionDate { get; set; }
+        public DateTime? CompletionDate { get; set; }
         public required string FileScanUrl { get; set; }
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }

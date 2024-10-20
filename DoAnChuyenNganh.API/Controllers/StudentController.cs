@@ -19,7 +19,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo Vụ Khoa")]
         [HttpGet]
-        public async Task<IActionResult> GetStudents(string? id, string? name, string? studentClass = null, string? studentMajor = null, int index = 1, int pageSize = 10)
+        public async Task<IActionResult> GetStudents(string? id, string? name, string? studentClass, string? studentMajor, int index = 1, int pageSize = 10)
         {
             BasePaginatedList<StudentResponseDTO>? paginatedStudents = await _studentService.GetStudents(id, name, studentClass, studentMajor, index, pageSize);
             return Ok(BaseResponse<BasePaginatedList<StudentResponseDTO>>.OkResponse(paginatedStudents));
@@ -34,7 +34,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         }
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo Vụ Khoa")]
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateStudent(string id, StudentModelView studentModelView)
         {
             await _studentService.UpdateStudent(id, studentModelView);
@@ -42,7 +42,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         }
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo Vụ Khoa")]
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteStudent(string id)
         {
             await _studentService.DeleteStudent(id);

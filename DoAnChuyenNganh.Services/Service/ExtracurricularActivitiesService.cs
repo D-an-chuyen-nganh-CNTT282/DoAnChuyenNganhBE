@@ -51,15 +51,15 @@ namespace DoAnChuyenNganh.Services.Service
             }
             if (string.IsNullOrEmpty(activitiesId))
             {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động!");
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động ngoại khóa!");
             }
             if (string.IsNullOrEmpty(studentId))
             {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã sinh viên!");
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã số sinh viên!");
             }
             ExtracurricularActivities? oldExtracurricularActivities = await _unitOfWork.GetRepository<ExtracurricularActivities>()
                 .Entities.FirstOrDefaultAsync(a => a.Id == id && a.StudentId == studentId && a.ActivitiesId == activitiesId)
-                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy hoạt động doanh nghiệp nào với mã {id}");
+                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy hoạt động ngoại khóa nào với mã {id}");
             await _unitOfWork.GetRepository<ExtracurricularActivities>().DeleteAsync(id, studentId, activitiesId);
             ExtracurricularActivities newExtracurricularActivities = new ExtracurricularActivities
             {

@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.ComponentModel.DataAnnotations;
 
 namespace DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews
 {
     public class StudentExpectationsModelView
     {
+        public enum ProcessingStatus
+        {
+            Pending,
+            Received,
+            InProcess,
+            Processed
+        }
+        [Required]
         public string StudentId { get; set; }
-
-        public string RequestCategory { get; set; }
-
+        public required string RequestCategory { get; set; }
         public Guid UserId { get; set; }
-
-        public string ProcessingStatus { get; set; }
-
+        public ProcessingStatus Status { get; set; } 
         public DateTime RequestDate { get; set; }
-
         public DateTime CompletionDate { get; set; }
-
-        public string FileScanUrl { get; set; }
+        public required string FileScanUrl { get; set; }
     }
 }
+

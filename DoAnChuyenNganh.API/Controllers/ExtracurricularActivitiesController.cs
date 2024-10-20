@@ -1,10 +1,7 @@
-﻿using DoAnChuyenNganh.Contract.Repositories.Entity;
-using DoAnChuyenNganh.Contract.Services.Interface;
+﻿using DoAnChuyenNganh.Contract.Services.Interface;
 using DoAnChuyenNganh.Core.Base;
-using DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.ExtracurricularActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
-using DoAnChuyenNganh.Services.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +22,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetExtracurricularActivities(string? id, string? studentId, string? activitiesId, int pageIndex = 1, int pageSize = 10)
         {
-            var paginatedExtracurricularActivities = await _extracurricularActivitiesService.GetExtracurricularActivities(id, studentId, activitiesId, pageIndex, pageSize);
+            BasePaginatedList<ExtracurricularActivitiesReponseDTO> paginatedExtracurricularActivities = await _extracurricularActivitiesService.GetExtracurricularActivities(id, studentId, activitiesId, pageIndex, pageSize);
             return Ok(BaseResponse<BasePaginatedList<ExtracurricularActivitiesReponseDTO>>.OkResponse(paginatedExtracurricularActivities));
         }
 

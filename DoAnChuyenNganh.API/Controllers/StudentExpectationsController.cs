@@ -22,7 +22,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetStudentExpectations(string? id, string? studentId, string? requestCategory, int pageIndex = 1, int pageSize = 10)
         {
-            var paginatedStudentExpectations = await _studentExpectationsService.GetStudentExpectations(id, studentId, requestCategory, pageIndex, pageSize);
+            BasePaginatedList<StudentExpectationsResponseDTO> paginatedStudentExpectations = await _studentExpectationsService.GetStudentExpectations(id, studentId, requestCategory, pageIndex, pageSize);
             return Ok(BaseResponse<BasePaginatedList<StudentExpectationsResponseDTO>>.OkResponse(paginatedStudentExpectations));
         }
 

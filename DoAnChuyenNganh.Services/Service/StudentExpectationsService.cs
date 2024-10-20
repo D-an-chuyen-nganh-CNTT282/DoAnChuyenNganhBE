@@ -5,12 +5,11 @@ using DoAnChuyenNganh.Contract.Services.Interface;
 using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.Core.Store;
 using DoAnChuyenNganh.Core.Utils;
-using DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
+using DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace DoAnChuyenNganh.Services.Service
 {
@@ -29,40 +28,59 @@ namespace DoAnChuyenNganh.Services.Service
 
         public async Task CreateStudentExpectations(StudentExpectationsModelView studentExpectationsModelView)
         {
-            string? UserId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(UserId))
+            string? userId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userId))
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
+
             StudentExpectations studentExpectations = _mapper.Map<StudentExpectations>(studentExpectationsModelView);
-            studentExpectations.CreatedBy = UserId;
+
+            // Gán trạng thái xử lý
+            studentExpectations.ProcessingStatuss = (StudentExpectations.ProcessingStatus)studentExpectationsModelView.Status;
+
+            // Gán UserId cho đối tượng studentExpectations
+            studentExpectations.UserId = Guid.Parse(userId);
+            studentExpectations.CreatedBy = userId;
             studentExpectations.CreatedTime = CoreHelper.SystemTimeNow;
+            studentExpectations.LastUpdatedBy = userId;
+            studentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow;
+
             await _unitOfWork.GetRepository<StudentExpectations>().InsertAsync(studentExpectations);
             await _unitOfWork.SaveAsync();
         }
 
         public async Task UpdateStudentExpectations(string id, StudentExpectationsModelView studentExpectationsModelView)
         {
-            string? UserId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(UserId))
+            string? userId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userId))
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
+
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã yêu cầu của sinh viên!");
             }
 
-            StudentExpectations? existingExpectation = await _unitOfWork.GetRepository<StudentExpectations>()
+            StudentExpectations? oldStudentExpectations = await _unitOfWork.GetRepository<StudentExpectations>()
                 .Entities.FirstOrDefaultAsync(a => a.Id == id)
                 ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy yêu cầu nào với mã {id}");
 
-            existingExpectation.RequestCategory = studentExpectationsModelView.RequestCategory;
-            existingExpectation.ProcessingStatuss = (StudentExpectations.ProcessingStatus)Enum.Parse(typeof(StudentExpectations.ProcessingStatus), studentExpectationsModelView.ProcessingStatus);
-            existingExpectation.LastUpdatedBy = UserId;
-            existingExpectation.LastUpdatedTime = CoreHelper.SystemTimeNow;
+            // Cập nhật thông tin yêu cầu sinh viên
+            oldStudentExpectations.StudentId = studentExpectationsModelView.StudentId;
+            oldStudentExpectations.RequestCategory = studentExpectationsModelView.RequestCategory;
+            oldStudentExpectations.ProcessingStatuss = (StudentExpectations.ProcessingStatus)studentExpectationsModelView.Status;
+            oldStudentExpectations.RequestDate = studentExpectationsModelView.RequestDate;
+            oldStudentExpectations.CompletionDate = studentExpectationsModelView.CompletionDate;
+            oldStudentExpectations.FileScanUrl = studentExpectationsModelView.FileScanUrl;
 
-            await _unitOfWork.GetRepository<StudentExpectations>().UpdateAsync(existingExpectation);
+            oldStudentExpectations.LastUpdatedBy = userId;
+            oldStudentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow;
+
+            await _unitOfWork.GetRepository<StudentExpectations>().UpdateAsync(oldStudentExpectations);
             await _unitOfWork.SaveAsync();
         }
 
@@ -78,12 +96,13 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 query = query.Where(a => a.StudentId == studentId);
             }
-            if (!string.IsNullOrEmpty(requestCategory))
+            if (!string.IsNullOrWhiteSpace(requestCategory))
             {
                 query = query.Where(a => a.RequestCategory == requestCategory);
             }
 
             int totalItems = await query.CountAsync();
+
             List<StudentExpectationsResponseDTO>? studentExpectations = await query
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -92,11 +111,15 @@ namespace DoAnChuyenNganh.Services.Service
                     Id = expectation.Id,
                     StudentId = expectation.StudentId,
                     RequestCategory = expectation.RequestCategory,
-                    ProcessingStatus = expectation.ProcessingStatuss.ToString(),
+                    UserId = expectation.UserId, 
+                    ProcessingStatus = (StudentExpectationsModelView.ProcessingStatus)expectation.ProcessingStatuss,
+                    RequestDate = expectation.RequestDate,
+                    CompletionDate = expectation.CompletionDate,
+                    FileScanUrl = expectation.FileScanUrl,
                     CreatedBy = expectation.CreatedBy,
                     LastUpdatedBy = expectation.LastUpdatedBy,
                     CreatedTime = expectation.CreatedTime,
-                    LastUpdatedTime = expectation.LastUpdatedTime,
+                    LastUpdatedTime = expectation.LastUpdatedTime
                 })
                 .ToListAsync();
 

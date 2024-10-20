@@ -1,4 +1,5 @@
 ﻿using DoAnChuyenNganh.Contract.Services.Interface;
+using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
 using DoAnChuyenNganh.Services.Service;
 using Microsoft.AspNetCore.Http;
@@ -22,48 +23,26 @@ namespace DoAnChuyenNganhBE.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] IncomingDocumentModelViews model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             await _incomingDocumentService.Create(model);
-            return Ok(new { message = "Document created successfully" });
+            return Ok(BaseResponse<string>.OkResponse("Đã tạo thành công"));
+
         }
 
         // Phương thức xóa tài liệu đi theo id
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            try
-            {
-                await _incomingDocumentService.Delete(id);
-                return Ok(new { message = "Document deleted successfully" });
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
+            await _incomingDocumentService.Delete(id);
+            return Ok(BaseResponse<string>.OkResponse("Đã xóa thành công"));
+
         }
 
         // Phương thức cập nhật tài liệu đi theo id
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] IncomingDocumentModelViews model, IncomingDocumentProcessingStatus status)
+        public async Task<IActionResult> Update(string? id, [FromBody] IncomingDocumentModelViews model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                await _incomingDocumentService.Update(id, model,status);
-                return Ok(new { message = "Document updated successfully" });
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
+            await _incomingDocumentService.Update(id, model);
+            return Ok(BaseResponse<string>.OkResponse("Đã sửa thành công"));
         }
 
         // Phương thức lấy danh sách tài liệu đi theo phân trang

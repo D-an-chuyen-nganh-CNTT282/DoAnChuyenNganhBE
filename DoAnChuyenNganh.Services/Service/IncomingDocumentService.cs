@@ -3,6 +3,7 @@ using DoAnChuyenNganh.Contract.Repositories.Entity;
 using DoAnChuyenNganh.Contract.Repositories.Interface;
 using DoAnChuyenNganh.Contract.Services.Interface;
 using DoAnChuyenNganh.Core.Base;
+using DoAnChuyenNganh.Core.Store;
 using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using Microsoft.AspNetCore.Http;
@@ -39,15 +40,15 @@ namespace DoAnChuyenNganh.Services.Service
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task Delete(string id)
+        public async Task Delete(string? id)
         {
+
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Lỗi!!! Dữ liệu không tồn tại ");
+            }
             // Tìm tài liệu theo id
             var document = await _unitOfWork.GetRepository<IncomingDocument>().GetByIdAsync(id);
-
-            if (document == null)
-            {
-                throw new KeyNotFoundException($"Document with id {id} not found.");
-            }
 
             // Xóa tài liệu
             await _unitOfWork.GetRepository<IncomingDocument>().DeleteAsync(id);
@@ -168,15 +169,15 @@ namespace DoAnChuyenNganh.Services.Service
         }
 
 
-        public async Task Update(string id, IncomingDocumentModelViews incomingdocumentView, IncomingDocumentProcessingStatus status)
+        public async Task Update(string? id, IncomingDocumentModelViews incomingdocumentView)
         {
             var existingDocument = await _unitOfWork.GetRepository<IncomingDocument>().GetByIdAsync(id);
 
-            if (existingDocument == null)
+            if (string.IsNullOrWhiteSpace(id))
             {
-                throw new KeyNotFoundException($"Document with id {id} not found.");
+
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Lỗi!!! id sai ");
             }
-            existingDocument.IncomingDocumentProcessingStatuss = status;
             _mapper.Map(incomingdocumentView, existingDocument);
 
             _unitOfWork.GetRepository<IncomingDocument>().Update(existingDocument);

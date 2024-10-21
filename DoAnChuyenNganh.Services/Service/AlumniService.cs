@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using DoAnChuyenNganh.Core.Store;
-using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
 
 namespace DoAnChuyenNganh.Services.Service
 {
@@ -38,11 +37,12 @@ namespace DoAnChuyenNganh.Services.Service
             Alumni newAlumni = _mapper.Map<Alumni>(alumniModelView);
             newAlumni.CreatedTime = CoreHelper.SystemTimeNow;
             newAlumni.CreatedBy = UserId;
+            newAlumni.UserId = Guid.Parse(UserId);
             await _unitOfWork.GetRepository<Alumni>().InsertAsync(newAlumni);
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task Delete(string? id)
+        public async Task Delete(string id)
         {
             string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrWhiteSpace(UserId))
@@ -80,22 +80,22 @@ namespace DoAnChuyenNganh.Services.Service
             IQueryable<Alumni> query = _unitOfWork.GetRepository<Alumni>().Entities.Where(a => a.DeletedTime == null);
 
             // Apply filters if any are provided
-            if (!string.IsNullOrWhiteSpace(id))
+            if (!string.IsNullOrWhiteSpace(id) && string.IsNullOrEmpty(alumniName) && string.IsNullOrEmpty(alumniMajor) && string.IsNullOrEmpty(alumniCourse))
             {
                 query = query.Where(a => a.Id == id);
             }
 
-            if (!string.IsNullOrWhiteSpace(alumniName))
+            if (string.IsNullOrWhiteSpace(id) && !string.IsNullOrEmpty(alumniName) && string.IsNullOrEmpty(alumniMajor) && string.IsNullOrEmpty(alumniCourse))
             {
                 query = query.Where(a => a.AlumniName.Contains(alumniName));
             }
 
-            if (!string.IsNullOrWhiteSpace(alumniMajor))
+            if (string.IsNullOrWhiteSpace(id) && string.IsNullOrEmpty(alumniName) && !string.IsNullOrEmpty(alumniMajor) && string.IsNullOrEmpty(alumniCourse))
             {
                 query = query.Where(a => a.AlumniMajor.Contains(alumniMajor));
             }
 
-            if (!string.IsNullOrWhiteSpace(alumniCourse))
+            if (string.IsNullOrWhiteSpace(id) && string.IsNullOrEmpty(alumniName) && string.IsNullOrEmpty(alumniMajor) && !string.IsNullOrEmpty(alumniCourse))
             {
                 query = query.Where(a => a.AlumniCourse.Contains(alumniCourse));
             }

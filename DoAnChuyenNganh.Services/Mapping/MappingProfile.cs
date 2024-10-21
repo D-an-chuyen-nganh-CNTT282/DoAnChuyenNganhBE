@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DoAnChuyenNganh.Contract.Repositories.Entity;
 using DoAnChuyenNganh.ModelViews.ActivitiesModelViews;
+using DoAnChuyenNganh.ModelViews.AlumniActivitiesModelViews;
+using DoAnChuyenNganh.ModelViews.AlumniCompanyModelViews;
 using DoAnChuyenNganh.ModelViews.AlumniModelViews;
 using DoAnChuyenNganh.ModelViews.AuthModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews;
@@ -34,6 +36,11 @@ namespace DoAnChuyenNganh.Services.Mapping
 
             CreateMap<ApplicationUser, UserProfileResponseModelView>().ReverseMap();
 
+            CreateMap<AlumniCompany, AlumniCompanyResponseDTO>().ReverseMap();
+            CreateMap<AlumniCompanyModelView, AlumniCompany>().ReverseMap();
+
+            CreateMap<AlumniActivities, AlumniActivitiesResponseDTO>().ReverseMap();
+            CreateMap<AlumniActivitiesModelView, AlumniActivities>().ReverseMap();
 
 
             CreateMap<UserModelView, ApplicationUser>()

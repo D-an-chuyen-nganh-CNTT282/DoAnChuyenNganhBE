@@ -8,12 +8,7 @@ using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static DoAnChuyenNganh.Contract.Repositories.Entity.IncomingDocument;
+using System.Security.Claims;
 using Status = DoAnChuyenNganh.Contract.Repositories.Entity.IncomingDocument.IncomingDocumentProcessingStatus;
 namespace DoAnChuyenNganh.Services.Service
 {
@@ -30,17 +25,23 @@ namespace DoAnChuyenNganh.Services.Service
         }
         public async Task Create(IncomingDocumentModelViews incomingdocumentView)
         {
+            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(UserId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
+            }
             // Map từ View Model sang Model
             var IncomingDocument = _mapper.Map<IncomingDocument>(incomingdocumentView);
             IncomingDocument.IncomingDocumentProcessingStatuss = Status.InProcess;
             // Thêm tài liệu vào repository
+            IncomingDocument.UserId = Guid.Parse(UserId);
             await _unitOfWork.GetRepository<IncomingDocument>().InsertAsync(IncomingDocument);
 
             // Lưu thay đổi vào cơ sở dữ liệu
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task Delete(string? id)
+        public async Task Delete(string id)
         {
 
             if (string.IsNullOrWhiteSpace(id))

@@ -1,10 +1,8 @@
 ﻿using DoAnChuyenNganh.Contract.Services.Interface;
 using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
-using DoAnChuyenNganh.Services.Service;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static DoAnChuyenNganh.Contract.Repositories.Entity.IncomingDocument;
+
 
 namespace DoAnChuyenNganhBE.API.Controllers
 {
@@ -39,7 +37,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
 
         // Phương thức cập nhật tài liệu đi theo id
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string? id, [FromBody] IncomingDocumentModelViews model)
+        public async Task<IActionResult> Update(string id, [FromBody] IncomingDocumentModelViews model)
         {
             await _incomingDocumentService.Update(id, model);
             return Ok(BaseResponse<string>.OkResponse("Đã sửa thành công"));
@@ -47,7 +45,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
 
         // Phương thức lấy danh sách tài liệu đi theo phân trang
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] string? id, [FromQuery] string? title, [FromQuery] Guid userId, [FromQuery] DateTime dueDate, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 1)
+        public async Task<IActionResult> Get([FromQuery] string id, [FromQuery] string? title, [FromQuery] Guid userId, [FromQuery] DateTime dueDate, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 1)
         {
             var result = await _incomingDocumentService.Get(id, title, userId, dueDate, pageSize, pageIndex);
             return Ok(result);

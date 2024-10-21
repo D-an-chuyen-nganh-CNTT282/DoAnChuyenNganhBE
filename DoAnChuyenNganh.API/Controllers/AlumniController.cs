@@ -1,8 +1,6 @@
 ﻿using DoAnChuyenNganh.Contract.Services.Interface;
 using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.AlumniModelViews;
-using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoAnChuyenNganhBE.API.Controllers
@@ -37,7 +35,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
 
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string? id, [FromBody] AlumniModelView model)
+        public async Task<IActionResult> Update(string id, AlumniModelView model)
         {
             await _Ialumservice.Update(id, model);
             return Ok(BaseResponse<string>.OkResponse("Đã sửa thành công"));
@@ -45,7 +43,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
 
         // Phương thức phân trang
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] string? id, [FromQuery] string alumniName, [FromQuery] string alumniMajor, [FromQuery] string alumniCourse,[FromForm] int pageSize = 10, [FromQuery] int pageIndex = 1)
+        public async Task<IActionResult> Get( string? id,  string? alumniName, string? alumniMajor,  string? alumniCourse, int pageSize = 10, int pageIndex = 1)
         {
             var result = await _Ialumservice.Get(id, alumniName, alumniMajor, alumniCourse,pageSize, pageIndex);
             return Ok(result);

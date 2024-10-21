@@ -116,9 +116,13 @@ namespace DoAnChuyenNganhBE.API
             services.AddScoped<IInternshipManagementService, InternshipManagementService>();
             services.AddScoped<IIncomingDocumentService, IncomingDocumentService>();
             services.AddScoped<IAlumniService, AlumniService>();
+            services.AddScoped<IAlumniActivitiesService, AlumniActivitiesService>();
             services.AddHttpContextAccessor();
             services.AddScoped<DepartmentManager>();
             services.AddScoped<LecturerManager>();
+            services.AddScoped<IAlumniCompanyService, AlumniCompanyService>();
+            
+
         }
         public static void AddAutoMapperConfig(this IServiceCollection services)
         {

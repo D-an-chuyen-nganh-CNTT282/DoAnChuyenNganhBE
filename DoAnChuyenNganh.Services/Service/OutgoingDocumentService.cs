@@ -39,9 +39,7 @@ namespace DoAnChuyenNganh.Services.Service
 
             outgoingDocument.UserId = Guid.Parse(userId);
             outgoingDocument.CreatedBy = userId;
-            outgoingDocument.CreatedTime = CoreHelper.SystemTimeNow.DateTime;
-            outgoingDocument.LastUpdatedBy = userId;
-            outgoingDocument.LastUpdatedTime = CoreHelper.SystemTimeNow.DateTime;
+            outgoingDocument.CreatedTime = CoreHelper.SystemTimeNow;
 
             await _unitOfWork.GetRepository<OutgoingDocument>().InsertAsync(outgoingDocument);
             await _unitOfWork.SaveAsync();
@@ -79,9 +77,7 @@ namespace DoAnChuyenNganh.Services.Service
                     UserId = doc.UserId,
                     OutgoingDocumentProcessingStatuss = doc.OutgoingDocumentProcessingStatuss.ToString(),
                     CreatedBy = doc.CreatedBy,
-                    LastUpdatedBy = doc.LastUpdatedBy,
                     CreatedTime = doc.CreatedTime,
-                    LastUpdatedTime = doc.LastUpdatedTime
                 })
                 .ToListAsync();
 

@@ -37,7 +37,6 @@ namespace DoAnChuyenNganh.Services.Service
 
             StudentExpectations studentExpectations = _mapper.Map<StudentExpectations>(studentExpectationsModelView);
 
-            // Gán UserId cho đối tượng studentExpectations
             studentExpectations.UserId = Guid.Parse(userId);
             studentExpectations.CreatedBy = userId;
             studentExpectations.CreatedTime = CoreHelper.SystemTimeNow;

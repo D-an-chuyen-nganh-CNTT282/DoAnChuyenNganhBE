@@ -34,7 +34,7 @@ namespace DoAnChuyenNganh.Services.Service
             }
             ExtracurricularActivities extracurricularActivities = _mapper.Map<ExtracurricularActivities>(extracurricularActivitiesModelView);
             extracurricularActivities.CreatedBy = UserId;
-            extracurricularActivities.CreatedTime = CoreHelper.SystemTimeNow;
+            extracurricularActivities.CreatedTime = CoreHelper.SystemTimeNow.DateTime;
             await _unitOfWork.GetRepository<ExtracurricularActivities>().InsertAsync(extracurricularActivities);
             await _unitOfWork.SaveAsync();
         }
@@ -67,8 +67,8 @@ namespace DoAnChuyenNganh.Services.Service
                 ActivitiesId = extracurricularActivitiesModelView.ActivitiesId,
                 CreatedBy = UserId,
                 LastUpdatedBy = UserId,
-                CreatedTime = CoreHelper.SystemTimeNow,
-                LastUpdatedTime = CoreHelper.SystemTimeNow
+                CreatedTime = CoreHelper.SystemTimeNow.DateTime,
+                LastUpdatedTime = CoreHelper.SystemTimeNow.DateTime
             };
             await _unitOfWork.GetRepository<ExtracurricularActivities>().InsertAsync(newExtracurricularActivities);
             await _unitOfWork.SaveAsync();

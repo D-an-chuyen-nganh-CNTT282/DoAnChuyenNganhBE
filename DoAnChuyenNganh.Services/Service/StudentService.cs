@@ -35,7 +35,7 @@ namespace DoAnChuyenNganh.Services.Service
             }
 
             Student newStudent = _mapper.Map<Student>(studentModelView);
-            newStudent.CreatedTime = CoreHelper.SystemTimeNow;
+            newStudent.CreatedTime = CoreHelper.SystemTimeNow.DateTime;
             newStudent.DeletedTime = null;
             newStudent.CreatedBy = UserId;
 
@@ -65,7 +65,7 @@ namespace DoAnChuyenNganh.Services.Service
             }
 
             student.DeletedBy = UserId;
-            student.DeletedTime = CoreHelper.SystemTimeNow;
+            student.DeletedTime = CoreHelper.SystemTimeNow.DateTime;
 
             await _unitOfWork.GetRepository<Student>().UpdateAsync(student);
             await _unitOfWork.SaveAsync();
@@ -88,7 +88,7 @@ namespace DoAnChuyenNganh.Services.Service
                 ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy sinh viên nào với mã {id}!");
 
             _mapper.Map(studentModelView, student);
-            student.LastUpdatedTime = CoreHelper.SystemTimeNow;
+            student.LastUpdatedTime = CoreHelper.SystemTimeNow.DateTime;
             student.LastUpdatedBy = UserId;
 
             await _unitOfWork.GetRepository<Student>().UpdateAsync(student);

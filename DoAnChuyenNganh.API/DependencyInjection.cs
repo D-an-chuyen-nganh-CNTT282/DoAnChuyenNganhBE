@@ -116,6 +116,7 @@ namespace DoAnChuyenNganhBE.API
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IExtracurricularActivitiesService, ExtracurricularActivitiesService>();
             services.AddScoped<IStudentExpectationsService, StudentExpectationsService>();
+            services.AddScoped<IOutgoingDocumentService, OutgoingDocumentService>();
             services.AddHttpContextAccessor();
             services.AddScoped<DepartmentManager>();
             services.AddScoped<LecturerManager>();

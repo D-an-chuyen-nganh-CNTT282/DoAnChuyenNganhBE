@@ -18,6 +18,7 @@ using DoAnChuyenNganh.ModelViews.TeachingScheduleModelViews;
 using DoAnChuyenNganh.ModelViews.UserModelViews;
 using DoAnChuyenNganh.Repositories.Entity;
 using DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews;
+using DoAnChuyenNganh.ModelViews.OutgoingDocumentModelViews;
 
 namespace DoAnChuyenNganh.Services.Mapping
 {
@@ -75,6 +76,9 @@ namespace DoAnChuyenNganh.Services.Mapping
 
             CreateMap<StudentExpectations, StudentExpectationsModelView>().ReverseMap();
             CreateMap<StudentExpectations,StudentExpectationsResponseDTO>().ReverseMap();
+
+            CreateMap<OutgoingDocument, OutgoingDocumentModelView>().ReverseMap();
+            CreateMap<OutgoingDocumentResponseDTO, OutgoingDocument>().ReverseMap();
 
         }
     }

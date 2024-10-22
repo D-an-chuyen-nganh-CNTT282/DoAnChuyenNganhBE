@@ -37,12 +37,11 @@ namespace DoAnChuyenNganh.Services.Service
 
             StudentExpectations studentExpectations = _mapper.Map<StudentExpectations>(studentExpectationsModelView);
 
-            // Gán UserId cho đối tượng studentExpectations
             studentExpectations.UserId = Guid.Parse(userId);
             studentExpectations.CreatedBy = userId;
-            studentExpectations.CreatedTime = CoreHelper.SystemTimeNow;
+            studentExpectations.CreatedTime = CoreHelper.SystemTimeNow.DateTime;
             studentExpectations.LastUpdatedBy = userId;
-            studentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow;
+            studentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow.DateTime;
 
             await _unitOfWork.GetRepository<StudentExpectations>().InsertAsync(studentExpectations);
             await _unitOfWork.SaveAsync();
@@ -68,7 +67,7 @@ namespace DoAnChuyenNganh.Services.Service
             _mapper.Map(studentExpectationsModelView, studentExpectations);
             studentExpectations.UserId = Guid.Parse(userId);
             studentExpectations.LastUpdatedBy = userId;
-            studentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow;
+            studentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow.DateTime;
 
             await _unitOfWork.GetRepository<StudentExpectations>().UpdateAsync(studentExpectations);
             await _unitOfWork.SaveAsync();

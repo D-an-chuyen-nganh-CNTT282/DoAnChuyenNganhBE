@@ -1,10 +1,9 @@
-﻿using DoAnChuyenNganh.Core.Base;
-using DoAnChuyenNganh.Repositories.Entity;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿
+using System.ComponentModel.DataAnnotations;
 
-namespace DoAnChuyenNganh.Contract.Repositories.Entity
+namespace DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews
 {
-    public class StudentExpectations : BaseEntity
+    public class StudentExpectationsModelView
     {
         public enum ProcessingStatus
         {
@@ -13,22 +12,14 @@ namespace DoAnChuyenNganh.Contract.Repositories.Entity
             InProcess,
             Processed
         }
-
+        [Required]
         public string StudentId { get; set; }
-
         public required string RequestCategory { get; set; }
-
         public Guid UserId { get; set; }
-
-        public required ProcessingStatus ProcessingStatuss { get; set; }
-
+        public ProcessingStatus Status { get; set; } 
         public DateTime RequestDate { get; set; }
-
         public DateTime? CompletionDate { get; set; }
         public required string FileScanUrl { get; set; }
-        [ForeignKey("UserId")]
-        public virtual ApplicationUser User { get; set; }
-
-        public virtual Student Student { get; set; } = null!;
     }
 }
+

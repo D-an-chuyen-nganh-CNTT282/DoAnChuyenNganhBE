@@ -1,6 +1,8 @@
 ﻿using DoAnChuyenNganh.Contract.Services.Interface;
 using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
+using DoAnChuyenNganh.ModelViews.ResponseDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -17,38 +19,37 @@ namespace DoAnChuyenNganhBE.API.Controllers
             _incomingDocumentService = incomingDocumentService;
         }
 
-        // Phương thức tạo tài liệu đi
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] IncomingDocumentModelViews model)
+        public async Task<IActionResult> Create( IncomingDocumentModelViews model)
         {
             await _incomingDocumentService.Create(model);
-            return Ok(BaseResponse<string>.OkResponse("Đã tạo thành công"));
-
+            return Ok(BaseResponse<string>.OkResponse("Đã tạo công văn đến thành công"));
         }
 
-        // Phương thức xóa tài liệu đi theo id
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             await _incomingDocumentService.Delete(id);
-            return Ok(BaseResponse<string>.OkResponse("Đã xóa thành công"));
+            return Ok(BaseResponse<string>.OkResponse("Đã xóa công văn đến thành công"));
 
         }
 
-        // Phương thức cập nhật tài liệu đi theo id
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] IncomingDocumentModelViews model)
+        public async Task<IActionResult> Update(string id,IncomingDocumentModelViews model)
         {
             await _incomingDocumentService.Update(id, model);
-            return Ok(BaseResponse<string>.OkResponse("Đã sửa thành công"));
+            return Ok(BaseResponse<string>.OkResponse("Đã sửa công văn đến thành công"));
         }
 
-        // Phương thức lấy danh sách tài liệu đi theo phân trang
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] string id, [FromQuery] string? title, [FromQuery] Guid userId, [FromQuery] DateTime dueDate, [FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 1)
+        public async Task<IActionResult> Get( string? id, string? title, Guid userId, DateTime dueDate, int pageSize = 10, int pageIndex = 1)
         {
-            var result = await _incomingDocumentService.Get(id, title, userId, dueDate, pageSize, pageIndex);
-            return Ok(result);
+            BasePaginatedList<IncomingDocumentResponseDTO>? paginatedIncomingDocument = await _incomingDocumentService.Get(id, title, userId, dueDate, pageSize, pageIndex);
+            return Ok(BaseResponse<BasePaginatedList<IncomingDocumentResponseDTO>>.OkResponse(paginatedIncomingDocument));
         }
     }
 }

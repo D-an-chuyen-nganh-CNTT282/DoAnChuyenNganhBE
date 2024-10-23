@@ -20,7 +20,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa, Giảng Viên")]
         [HttpGet]
-        public async Task<IActionResult> GetAlumniActivities(string id, string? alumniId, string? activitiesId, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAlumniActivities(string? id, string? alumniId, string? activitiesId, int pageIndex = 1, int pageSize = 10)
         {
             BasePaginatedList<AlumniActivitiesResponseDTO>? paginatedAlumniActivities = await _alumniActivitiesService.GetAlumniActivities(id, alumniId, activitiesId, pageIndex, pageSize);
             return Ok(BaseResponse<BasePaginatedList<AlumniActivitiesResponseDTO>>.OkResponse(paginatedAlumniActivities));
@@ -36,9 +36,9 @@ namespace DoAnChuyenNganhBE.API.Controllers
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa, Giảng Viên")]
         [HttpPut]
-        public async Task<IActionResult> UpdateAlumniActivities(string id, string alumniId, string activitiesId, AlumniActivitiesModelView alumniActivitiesModelView)
+        public async Task<IActionResult> UpdateAlumniActivities(string id, string alumniId,string activitiId , AlumniActivitiesModelView alumniActivitiesModelView)
         {
-            await _alumniActivitiesService.UpdateAlumniActivities(id, alumniActivitiesModelView);
+            await _alumniActivitiesService.UpdateAlumniActivities(id,alumniId,activitiId, alumniActivitiesModelView);
             return Ok(BaseResponse<string>.OkResponse("Sửa hoạt động cựu sinh viên thành công!"));
         }
 

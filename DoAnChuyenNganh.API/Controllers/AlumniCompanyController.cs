@@ -18,15 +18,15 @@ namespace DoAnChuyenNganhBE.API.Controllers
             _alumniCompanyService = alumniCompanyService;
         }
 
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa, Giảng Viên")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
         [HttpGet]
-        public async Task<IActionResult> GetAlumniCompany(string id, string? alumniId, string? companyId, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAlumniCompany(string? id, string? alumniId, string? companyId, int pageIndex = 1, int pageSize = 10)
         {
             BasePaginatedList<AlumniCompanyResponseDTO> paginatedAlumniCompanies = await _alumniCompanyService.GetAlumniCompany(id, alumniId, companyId, pageIndex, pageSize);
             return Ok(BaseResponse<BasePaginatedList<AlumniCompanyResponseDTO>>.OkResponse(paginatedAlumniCompanies));
         }
 
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa, Giảng Viên")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
         [HttpPost]
         public async Task<IActionResult> CreateAlumniCompany(AlumniCompanyModelView alumniCompanyModelView)
         {
@@ -34,11 +34,11 @@ namespace DoAnChuyenNganhBE.API.Controllers
             return Ok(BaseResponse<string>.OkResponse("Thêm công ty cho cựu sinh viên thành công!"));
         }
 
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa, Giảng Viên")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAlumniCompany(string id, string alumniId, string companyId, AlumniCompanyModelView alumniCompanyModelView)
+        public async Task<IActionResult> UpdateAlumniCompany(string id, string alumniId, string CompanyId,  AlumniCompanyModelView alumniCompanyModelView)
         {
-            await _alumniCompanyService.UpdateAlumniCompany(id, alumniId, companyId, alumniCompanyModelView);
+            await _alumniCompanyService.UpdateAlumniCompany(id,alumniId, CompanyId, alumniCompanyModelView);
             return Ok(BaseResponse<string>.OkResponse("Cập nhật công ty cho cựu sinh viên thành công!"));
         }
     }

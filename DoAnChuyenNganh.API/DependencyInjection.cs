@@ -32,7 +32,6 @@ namespace DoAnChuyenNganhBE.API
             services.AddAuthenticationBearer(configuration);
             services.AddAutoMapperConfig();
             services.AddEmailConfig(configuration);
-
         }
         public static void AddAuthenticationBearer(this IServiceCollection services, IConfiguration configuration)
         {
@@ -114,15 +113,19 @@ namespace DoAnChuyenNganhBE.API
             services.AddScoped<IBusinessCollaborationService, BusinessCollaborationService>();
             services.AddScoped<IBusinessActivitesService, BusinessActivitiesService>();
             services.AddScoped<IInternshipManagementService, InternshipManagementService>();
-            services.AddScoped<IIncomingDocumentService, IncomingDocumentService>();
-            services.AddScoped<IAlumniService, AlumniService>();
-            services.AddScoped<IAlumniActivitiesService, AlumniActivitiesService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IExtracurricularActivitiesService, ExtracurricularActivitiesService>();
+            services.AddScoped<IStudentExpectationsService, StudentExpectationsService>();
+            services.AddScoped<IOutgoingDocumentService, OutgoingDocumentService>();
             services.AddHttpContextAccessor();
             services.AddScoped<DepartmentManager>();
             services.AddScoped<LecturerManager>();
-            services.AddScoped<IAlumniCompanyService, AlumniCompanyService>();
-            
 
+            services.AddScoped<IIncomingDocumentService, IncomingDocumentService>();
+            services.AddScoped<IAlumniService, AlumniService>();
+            services.AddScoped<IAlumniActivitiesService, AlumniActivitiesService>();
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IAlumniCompanyService, AlumniCompanyService>();
         }
         public static void AddAutoMapperConfig(this IServiceCollection services)
         {

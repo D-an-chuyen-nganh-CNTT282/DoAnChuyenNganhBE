@@ -9,7 +9,6 @@ using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using AutoMapper.QueryableExtensions;
 using DoAnChuyenNganh.Contract.Services.Interface;
 
 namespace DoAnChuyenNganh.Services.Service
@@ -29,57 +28,49 @@ namespace DoAnChuyenNganh.Services.Service
 
         public async Task CreateAlumniActivities(AlumniActivitiesModelView alumniActivitiesModelView)
         {
-            string UserId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? UserId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (string.IsNullOrWhiteSpace(UserId))
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
-
-            AlumniActivities alumniActivities = _mapper.Map<AlumniActivities>(alumniActivitiesModelView);
-            alumniActivities.CreatedBy = UserId;
-            alumniActivities.CreatedTime = CoreHelper.SystemTimeNow;
-            
-            await _unitOfWork.GetRepository<AlumniActivities>().InsertAsync(alumniActivities);
+            AlumniActivities newAlumniActivities = _mapper.Map<AlumniActivities>(alumniActivitiesModelView);
+            newAlumniActivities.CreatedTime = CoreHelper.SystemTimeNow;
+            newAlumniActivities.DeletedTime = null;
+            newAlumniActivities.CreatedBy = UserId;
+            await _unitOfWork.GetRepository<AlumniActivities>().InsertAsync(newAlumniActivities);
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task UpdateAlumniActivities(string id, AlumniActivitiesModelView alumniActivitiesModelView)
+
+        private async Task<BasePaginatedList<AlumniActivitiesResponseDTO>> PaginateAlumniActivities(
+        IQueryable<AlumniActivities> query,
+        int? pageIndex,
+        int? pageSize)
         {
-            // Get the current user ID from the HttpContext
-            string? UserId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(UserId))
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
-            }
+            int currentPage = pageIndex ?? 1;
+            int currentPageSize = pageSize ?? 10;
+            int totalItems = await query.CountAsync();
 
-            // Validate the input parameters
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động cựu sinh viên!");
-            }
+            List<AlumniActivitiesResponseDTO>? alumniActivities = await query
+                .Skip((currentPage - 1) * currentPageSize)
+                .Take(currentPageSize)
+                .Select(alumniActiviti => new AlumniActivitiesResponseDTO
+                {
+                    Id = alumniActiviti.Id,
+                    ActivitiesId = alumniActiviti.ActivitiesId,
+                    AlumniId = alumniActiviti.AlumniId,
+                    CreatedBy = alumniActiviti.CreatedBy,
+                    LastUpdatedBy = alumniActiviti.LastUpdatedBy,
+                    CreatedTime = alumniActiviti.CreatedTime,
+                    LastUpdatedTime = alumniActiviti.LastUpdatedTime,
+                })
+                .ToListAsync();
 
-            // Find the existing AlumniActivities entry
-            AlumniActivities? oldAlumniActivities = await _unitOfWork.GetRepository<AlumniActivities>()
-                .Entities.FirstOrDefaultAsync(a => a.Id == id && a.DeletedTime == null)
-                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy hoạt động nào với mã {id}");
-
-            // Use AutoMapper to map the updated values from the model view
-            _mapper.Map(alumniActivitiesModelView, oldAlumniActivities);
-
-            // Set the fields that should be updated manually (like LastUpdatedBy and LastUpdatedTime)
-            oldAlumniActivities.LastUpdatedBy = UserId;
-            oldAlumniActivities.LastUpdatedTime = CoreHelper.SystemTimeNow;
-
-            // Update the entity in the database
-            await _unitOfWork.GetRepository<AlumniActivities>().UpdateAsync(oldAlumniActivities);
-            await _unitOfWork.SaveAsync();
+            return new BasePaginatedList<AlumniActivitiesResponseDTO>(alumniActivities, totalItems, currentPage, currentPageSize);
         }
-
-
         public async Task<BasePaginatedList<AlumniActivitiesResponseDTO>> GetAlumniActivities(string id, string? alumniId, string? activitiesId, int pageIndex, int pageSize)
         {
-            IQueryable<AlumniActivities>? query = _unitOfWork.GetRepository<AlumniActivities>()
-                .Entities.Where(a => a.DeletedTime == null);
+            IQueryable<AlumniActivities>? query = _unitOfWork.GetRepository<AlumniActivities>().Entities.Where(l => l.DeletedTime == null);
 
             if (!string.IsNullOrWhiteSpace(id))
             {
@@ -94,15 +85,66 @@ namespace DoAnChuyenNganh.Services.Service
                 query = query.Where(a => a.ActivitiesId == activitiesId);
             }
 
-            int totalItems = await query.CountAsync();
-
-            List<AlumniActivitiesResponseDTO>? alumniActivitiesDTOs = await query
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ProjectTo<AlumniActivitiesResponseDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
-            return new BasePaginatedList<AlumniActivitiesResponseDTO>(alumniActivitiesDTOs, totalItems, pageIndex, pageSize);
+            return await PaginateAlumniActivities(query, pageIndex, pageSize);
         }
 
+        public async Task DeleteAlumniActivities(string id)
+        {
+            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrWhiteSpace(UserId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
+            }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động cựu sinh viên!");
+            }
+            AlumniActivities? alumniActivities = await _unitOfWork.GetRepository<AlumniActivities>().GetByIdAsync(id)
+                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy hoạt động cựu sinh viên nào với mã {id}!");
+            if (alumniActivities.DeletedTime != null)
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, "Thông tin hoạt động cựu sinh viên đã bị xóa!");
+            }
+            alumniActivities.DeletedBy = UserId;
+            alumniActivities.DeletedTime = CoreHelper.SystemTimeNow;
+            await _unitOfWork.GetRepository<AlumniActivities>().UpdateAsync(alumniActivities);
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task UpdateAlumniActivities(string id, string alumiId, string activitiesId, AlumniActivitiesModelView alumniActivitiesModelView)
+        {
+            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrWhiteSpace(UserId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
+            }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động cựu sinh viên!");
+            }
+            if (string.IsNullOrEmpty(activitiesId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động!");
+            }
+            if (string.IsNullOrEmpty(alumiId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã cựu sinh viên!");
+            }
+            AlumniActivities? oldAlumniActivities = await _unitOfWork.GetRepository<AlumniActivities>()
+                .Entities.FirstOrDefaultAsync(a => a.Id == id && a.AlumniId == alumiId && a.ActivitiesId == activitiesId)
+                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy hoạt động cựu sinh viên nào với mã {id}");
+            await _unitOfWork.GetRepository<AlumniActivities>().DeleteAsync(id, alumiId, activitiesId);
+            AlumniActivities newAlumniActivities = new AlumniActivities
+            {
+                AlumniId = alumniActivitiesModelView.AlumniId,
+                ActivitiesId = alumniActivitiesModelView.ActivitiesId,
+                CreatedBy = UserId,
+                LastUpdatedBy = UserId,
+                CreatedTime = CoreHelper.SystemTimeNow,
+                LastUpdatedTime = CoreHelper.SystemTimeNow
+            };
+            await _unitOfWork.GetRepository<AlumniActivities>().InsertAsync(newAlumniActivities);
+            await _unitOfWork.SaveAsync();
+        }
     }
 }

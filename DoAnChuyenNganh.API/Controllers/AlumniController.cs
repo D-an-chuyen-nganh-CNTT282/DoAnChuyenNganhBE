@@ -1,52 +1,44 @@
 ﻿using DoAnChuyenNganh.Contract.Services.Interface;
 using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.AlumniModelViews;
+using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
 namespace DoAnChuyenNganhBE.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AlumniController : ControllerBase
     {
-        private readonly IAlumniService _Ialumservice;
+        private readonly IAlumniService _Ialumniservice;
         public AlumniController(IAlumniService Ialumservice)
         {
-           _Ialumservice = Ialumservice;
+           _Ialumniservice = Ialumservice;
         }
 
-        
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AlumniModelView model)
         {
-            await _Ialumservice.Create(model);
+            await _Ialumniservice.Create(model);
             return Ok(BaseResponse<string>.OkResponse("Đã tạo thành công"));
 
         }
 
-        
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
-        {
-            await _Ialumservice.Delete(id);
-            return Ok(BaseResponse<string>.OkResponse("Đã xóa thành công"));
-
-        }
-
-        
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, AlumniModelView model)
         {
-            await _Ialumservice.Update(id, model);
+            await _Ialumniservice.Update(id, model);
             return Ok(BaseResponse<string>.OkResponse("Đã sửa thành công"));
         }
 
-        // Phương thức phân trang
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
         [HttpGet]
         public async Task<IActionResult> Get( string? id,  string? alumniName, string? alumniMajor,  string? alumniCourse, int pageSize = 10, int pageIndex = 1)
         {
-            var result = await _Ialumservice.Get(id, alumniName, alumniMajor, alumniCourse,pageSize, pageIndex);
-            return Ok(result);
+            BasePaginatedList<AlumniResponseDTO>? paginatedAlumni = await _Ialumniservice.Get(id, alumniName, alumniMajor, alumniCourse, pageSize, pageIndex);
+            return Ok(BaseResponse<BasePaginatedList<AlumniResponseDTO>>.OkResponse(paginatedAlumni));
         }
     }
 }

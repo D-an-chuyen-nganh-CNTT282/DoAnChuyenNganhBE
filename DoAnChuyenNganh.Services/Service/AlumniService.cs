@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using DoAnChuyenNganh.Core.Store;
 
+
 namespace DoAnChuyenNganh.Services.Service
 {
     public class AlumniService : IAlumniService
@@ -28,56 +29,58 @@ namespace DoAnChuyenNganh.Services.Service
 
         public async Task Create(AlumniModelView alumniModelView)
         {
-            string? UserId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? UserId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (string.IsNullOrWhiteSpace(UserId))
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
-
             Alumni newAlumni = _mapper.Map<Alumni>(alumniModelView);
             newAlumni.CreatedTime = CoreHelper.SystemTimeNow;
+            newAlumni.DeletedTime = null;
             newAlumni.CreatedBy = UserId;
             newAlumni.UserId = Guid.Parse(UserId);
             await _unitOfWork.GetRepository<Alumni>().InsertAsync(newAlumni);
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task Delete(string id)
+
+        private async Task<BasePaginatedList<AlumniResponseDTO>> PaginateAlumni(IQueryable<Alumni> query, int? pageIndex, int? pageSize)
         {
-            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(UserId))
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
-            }
+            int currentPage = pageIndex ?? 1;
+            int currentPageSize = pageSize ?? 10;
+            int totalItems = await query.CountAsync();
 
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã cựu sinh viên!");
-            }
+            List<AlumniResponseDTO>? alumnis = await query
+                .Skip((currentPage - 1) * currentPageSize)
+                .Take(currentPageSize)
+                .Select(alumni => new AlumniResponseDTO
+                {
+                    Id = alumni.Id,
+                    AlumniName = alumni.AlumniName,
+                    DayOfBirth = alumni.DayOfBirth,
+                    AlumniMajor = alumni.AlumniMajor,
+                    AlumniGender = alumni.AlumniGender,
+                    AlumniAddress = alumni.AlumniAddress,
+                    AlumniCourse = alumni.AlumniCourse,
+                    AlumniEmail = alumni.AlumniEmail,
+                    AlumniPhone = alumni.AlumniPhone,
+                    GraduationDay = alumni.GraduationDay,
+                    LecturerId = alumni.LecturerId,
+                    UserId = alumni.UserId,
+                    PreviousClass = alumni.PreviousClass,
+                    CreatedBy = alumni.CreatedBy,
+                    LastUpdatedBy = alumni.LastUpdatedBy,
+                    CreatedTime = alumni.CreatedTime,
+                    LastUpdatedTime = alumni.LastUpdatedTime,
+                })
+                .ToListAsync();
 
-            Alumni? alumni = await _unitOfWork.GetRepository<Alumni>().GetByIdAsync(id)
-                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy cựu sinh viên nào với mã {id}!");
-
-            if (alumni.DeletedTime != null)
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, "Thông tin cựu sinh viên đã bị xóa!");
-            }
-
-            alumni.DeletedBy = UserId;
-            alumni.DeletedTime = CoreHelper.SystemTimeNow;
-            await _unitOfWork.GetRepository<Alumni>().UpdateAsync(alumni);
-            await _unitOfWork.SaveAsync();
+            return new BasePaginatedList<AlumniResponseDTO>(alumnis, totalItems, currentPage, currentPageSize);
         }
-
-        public async Task<BasePaginatedList<AlumniResponseDTO>> Get(string? id, string? alumniName, string? alumniMajor, string? alumniCourse, int pageSize, int pageIndex)
+        public async Task<BasePaginatedList<AlumniResponseDTO>> Get(string id, string alumniName, string alumniMajor, string alumniCourse, int pageSize, int pageIndex)
         {
-            if (pageIndex == 0 && pageSize == 0)
-            {
-                pageSize = 5; // Default page size
-                pageIndex = 1; // Default page index
-            }
 
-            IQueryable<Alumni> query = _unitOfWork.GetRepository<Alumni>().Entities.Where(a => a.DeletedTime == null);
+            IQueryable<Alumni>? query = _unitOfWork.GetRepository<Alumni>().Entities.Where(l => l.DeletedTime == null);
 
             // Apply filters if any are provided
             if (!string.IsNullOrWhiteSpace(id) && string.IsNullOrEmpty(alumniName) && string.IsNullOrEmpty(alumniMajor) && string.IsNullOrEmpty(alumniCourse))
@@ -99,38 +102,24 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 query = query.Where(a => a.AlumniCourse.Contains(alumniCourse));
             }
-
-            // Pagination and count
-            int totalItems = await query.CountAsync();
-            List<Alumni> paginatedAlumni = await query
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            // Mapping to DTOs
-            List<AlumniResponseDTO> alumniDTOs = _mapper.Map<List<AlumniResponseDTO>>(paginatedAlumni);
-
-            return new BasePaginatedList<AlumniResponseDTO>(alumniDTOs, totalItems, pageIndex, pageSize);
+            return await PaginateAlumni(query, pageIndex, pageSize);
         }
 
 
-        public async Task Update(string? id, AlumniModelView alumniView)
+        public async Task Update(string id, AlumniModelView alumniView)
         {
-            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (string.IsNullOrWhiteSpace(UserId))
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
-
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã cựu sinh viên!");
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã cựa sinh viên!");
             }
-
             Alumni? alumni = await _unitOfWork.GetRepository<Alumni>().GetByIdAsync(id)
                 ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy cựu sinh viên nào với mã {id}!");
-
-            _mapper.Map(alumniView, alumni); // Assuming the mapping exists between IncomingDocumentModelViews and Alumni
+            _mapper.Map(alumniView, alumni);
             alumni.LastUpdatedTime = CoreHelper.SystemTimeNow;
             alumni.LastUpdatedBy = UserId;
             await _unitOfWork.GetRepository<Alumni>().UpdateAsync(alumni);

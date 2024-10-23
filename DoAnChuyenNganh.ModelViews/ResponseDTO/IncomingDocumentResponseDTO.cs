@@ -8,8 +8,8 @@
         public DateTime ReceivedDate { get; set; }
         public string DepartmentId { get; set; }
         public string IncomingDocumentProcessingStatuss { get; set; }
-        public required string FileScanUrl { get; set; }
-        public required Guid UserId { get; set; }
+        public string FileScanUrl { get; set; }
+        public Guid UserId { get; set; }
         public string? CreatedBy { get; set; }
         public string? LastUpdatedBy { get; set; }
         public DateTimeOffset CreatedTime { get; set; }

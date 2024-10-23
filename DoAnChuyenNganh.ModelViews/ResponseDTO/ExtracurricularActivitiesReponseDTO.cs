@@ -1,10 +1,10 @@
 ﻿
 namespace DoAnChuyenNganh.ModelViews.ResponseDTO
 {
-    public class BusinessActivitiesResponseDTO
+    public class ExtracurricularActivitiesReponseDTO
     {
         public string Id { get; set; }
-        public string BusinessId { get; set; }
+        public string StudentId { get; set; }
         public string ActivitiesId { get; set; }
         public string? CreatedBy { get; set; }
         public string? LastUpdatedBy { get; set; }

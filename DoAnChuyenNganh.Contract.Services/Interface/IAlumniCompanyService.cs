@@ -9,6 +9,6 @@ namespace DoAnChuyenNganh.Contract.Services.Interface
     {
         Task<BasePaginatedList<AlumniCompanyResponseDTO>> GetAlumniCompany(string id, string? alumniId, string? CompanyId, int pageIndex, int pageSize);
         Task CreateAlumniCompany(AlumniCompanyModelView alumniCompanyModelView);
-        Task UpdateAlumniCompany(string id, string alumniId, string CompanyId, AlumniCompanyModelView alumniCompanyModelView);
+        Task UpdateAlumniCompany(string id, string alumiId, string CompanyId, AlumniCompanyModelView alumniCompanyModelView);
     }
 }

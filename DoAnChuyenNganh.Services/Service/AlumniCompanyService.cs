@@ -28,46 +28,50 @@ namespace DoAnChuyenNganh.Services.Service
 
         public async Task CreateAlumniCompany(AlumniCompanyModelView alumniCompanyModelView)
         {
-            string? userId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(userId))
+            string? UserId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrWhiteSpace(UserId))
             {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Please log in!");
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
-
-            AlumniCompany alumniCompany = _mapper.Map<AlumniCompany>(alumniCompanyModelView);
-            alumniCompany.CreatedBy = userId;
-            alumniCompany.CreatedTime = CoreHelper.SystemTimeNow;
-            await _unitOfWork.GetRepository<AlumniCompany>().InsertAsync(alumniCompany);
+            AlumniCompany newAlumniCompany = _mapper.Map<AlumniCompany>(alumniCompanyModelView);
+            newAlumniCompany.CreatedTime = CoreHelper.SystemTimeNow;
+            newAlumniCompany.DeletedTime = null;
+            newAlumniCompany.CreatedBy = UserId;
+            await _unitOfWork.GetRepository<AlumniCompany>().InsertAsync(newAlumniCompany);
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task UpdateAlumniCompany(string id, string alumniId, string companyId, AlumniCompanyModelView alumniCompanyModelView)
+        private async Task<BasePaginatedList<AlumniCompanyResponseDTO>> PaginateAlumniCompany(
+        IQueryable<AlumniCompany> query,
+        int? pageIndex,
+        int? pageSize)
         {
-            string? userId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Please log in!");
-            }
+            int currentPage = pageIndex ?? 1;
+            int currentPageSize = pageSize ?? 10;
+            int totalItems = await query.CountAsync();
 
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Please enter a valid alumni company ID!");
-            }
+            List<AlumniCompanyResponseDTO>? alumnicompanys = await query
+                .Skip((currentPage - 1) * currentPageSize)
+                .Take(currentPageSize)
+                .Select(alumnicompany => new AlumniCompanyResponseDTO
+                {
+                    Id = alumnicompany.Id,
+                    AlumniId = alumnicompany.AlumniId,
+                    CompanyId = alumnicompany.CompanyId,
+                    StartDate = alumnicompany.StartDate,
+                    EndDate = alumnicompany.EndDate,
+                    CreatedBy = alumnicompany.CreatedBy,
+                    LastUpdatedBy = alumnicompany.LastUpdatedBy,
+                    CreatedTime = alumnicompany.CreatedTime,
+                    LastUpdatedTime = alumnicompany.LastUpdatedTime,
+                })
+                .ToListAsync();
 
-            AlumniCompany? existingAlumniCompany = await _unitOfWork.GetRepository<AlumniCompany>()
-                .Entities.FirstOrDefaultAsync(a => a.Id == id)
-                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"No alumni company found with ID {id}");
-
-            _mapper.Map(alumniCompanyModelView, existingAlumniCompany);
-            existingAlumniCompany.LastUpdatedBy = userId;
-            existingAlumniCompany.LastUpdatedTime = CoreHelper.SystemTimeNow;
-
-            await _unitOfWork.SaveAsync();
+            return new BasePaginatedList<AlumniCompanyResponseDTO>(alumnicompanys, totalItems, currentPage, currentPageSize);
         }
-
         public async Task<BasePaginatedList<AlumniCompanyResponseDTO>> GetAlumniCompany(string id, string? alumniId, string? companyId, int pageIndex, int pageSize)
         {
-            IQueryable<AlumniCompany> query = _unitOfWork.GetRepository<AlumniCompany>().Entities.Where(b => b.DeletedTime == null);
+            IQueryable<AlumniCompany>? query = _unitOfWork.GetRepository<AlumniCompany>().Entities.Where(l => l.DeletedTime == null);
 
             if (!string.IsNullOrWhiteSpace(id))
             {
@@ -82,23 +86,46 @@ namespace DoAnChuyenNganh.Services.Service
                 query = query.Where(a => a.CompanyId == companyId);
             }
 
-            int totalItems = await query.CountAsync();
-            List<AlumniCompanyResponseDTO> alumniCompanies = await query
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .Select(company => new AlumniCompanyResponseDTO
-                {
-                    Id = company.Id,
-                    AlumniId = company.AlumniId,
-                    CompanyId = company.CompanyId,
-                    CreatedBy = company.CreatedBy,
-                    LastUpdatedBy = company.LastUpdatedBy,
-                    CreatedTime = company.CreatedTime,
-                    LastUpdatedTime = company.LastUpdatedTime,
-                })
-                .ToListAsync();
+            return await PaginateAlumniCompany(query, pageIndex, pageSize);
+        }
 
-            return new BasePaginatedList<AlumniCompanyResponseDTO>(alumniCompanies, totalItems, pageIndex, pageSize);
+        public async Task UpdateAlumniCompany(string id, string alumiId, string CompanyId, AlumniCompanyModelView alumniCompanyModelView)
+        {
+            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrWhiteSpace(UserId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
+            }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã công ty cựu sinh viên!");
+            }
+            if (string.IsNullOrEmpty(CompanyId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã công ty!");
+            }
+            if (string.IsNullOrEmpty(alumiId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã cựu sinh viên!");
+            }
+            AlumniCompany? oldAlumniCompany = await _unitOfWork.GetRepository<AlumniCompany>()
+                .Entities.FirstOrDefaultAsync(a => a.Id == id && a.AlumniId == alumiId && a.CompanyId == CompanyId)
+                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy công ty cựu sinh viên nào với mã {id}");
+            await _unitOfWork.GetRepository<AlumniCompany>().DeleteAsync(id, alumiId, CompanyId);
+            AlumniCompany newAlumniCompany = new AlumniCompany
+            { 
+                CompanyId = alumniCompanyModelView.CompanyId,
+                AlumniId = alumniCompanyModelView.AlumniId,
+                Duty = alumniCompanyModelView.Duty,
+                StartDate = alumniCompanyModelView.StartDate,
+                EndDate = alumniCompanyModelView.EndDate,
+                CreatedBy = UserId,
+                LastUpdatedBy = UserId,
+                CreatedTime = CoreHelper.SystemTimeNow,
+                LastUpdatedTime = CoreHelper.SystemTimeNow
+            };
+            await _unitOfWork.GetRepository<AlumniCompany>().InsertAsync(newAlumniCompany);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

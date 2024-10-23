@@ -8,6 +8,7 @@ namespace DoAnChuyenNganh.Contract.Services.Interface
     {
         Task<BasePaginatedList<AlumniActivitiesResponseDTO>> GetAlumniActivities(string id, string? alumniId, string? ActivitiesId, int pageIndex, int pageSize);
         Task CreateAlumniActivities(AlumniActivitiesModelView alumniActivitiesModelView);
-        Task UpdateAlumniActivities(string id,AlumniActivitiesModelView alumniActivitiesModelView);
+        Task UpdateAlumniActivities(string id, string alumiId, string activitiesId, AlumniActivitiesModelView alumniActivitiesModelView);
+        Task DeleteAlumniActivities(string id);
     }
 }

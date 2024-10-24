@@ -87,6 +87,7 @@ namespace DoAnChuyenNganh.Services.Service
                     CompanyName = company.CompanyName,
                     CompanyEmail = company.CompanyEmail,
                     CompanyPhone = company.CompanyPhone,
+                    UserId = company.UserId,
                     CreatedBy = company.CreatedBy,
                     LastUpdatedBy = company.LastUpdatedBy,
                     CreatedTime = company.CreatedTime,

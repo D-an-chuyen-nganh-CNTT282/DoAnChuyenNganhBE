@@ -33,11 +33,11 @@ namespace DoAnChuyenNganh.Services.Service
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
             IncomingDocument newincomingdocument = _mapper.Map<IncomingDocument>(incomingdocumentView);
-            newincomingdocument.IncomingDocumentProcessingStatuss = Status.InProcess;
+
             newincomingdocument.UserId = Guid.Parse(UserId);
             newincomingdocument.CreatedTime = CoreHelper.SystemTimeNow;
-            newincomingdocument.DeletedTime = null;
             newincomingdocument.CreatedBy = UserId;
+
             await _unitOfWork.GetRepository<IncomingDocument>().InsertAsync(newincomingdocument);
             await _unitOfWork.SaveAsync();
         }
@@ -64,34 +64,10 @@ namespace DoAnChuyenNganh.Services.Service
             await _unitOfWork.GetRepository<IncomingDocument>().UpdateAsync(incomingDocument);
             await _unitOfWork.SaveAsync();
         }
-        private async Task<BasePaginatedList<IncomingDocumentResponseDTO>> PaginateIncomingDocument(IQueryable<IncomingDocument> query,int? pageIndex,int? pageSize)
+        
+        public async Task<BasePaginatedList<IncomingDocumentResponseDTO>> Get(string? id, string? Title, Guid? userid, DateTime? duedate, int pageSize, int pageIndex)
         {
-            int currentPage = pageIndex ?? 1;
-            int currentPageSize = pageSize ?? 10;
-            int totalItems = await query.CountAsync();
-
-            List<IncomingDocumentResponseDTO>? incomingDocuments = await query
-                .Skip((currentPage - 1) * currentPageSize)
-                .Take(currentPageSize)
-                .Select(icomingDocument => new IncomingDocumentResponseDTO
-                {
-                    Id = icomingDocument.Id,
-                    IncomingDocumentTitle = icomingDocument.IncomingDocumentTitle,
-                    IncomingDocumentContent = icomingDocument.IncomingDocumentContent,
-                    IncomingDocumentProcessingStatuss = icomingDocument.IncomingDocumentProcessingStatuss.ToString(),
-                    UserId = icomingDocument.UserId,
-                    CreatedBy = icomingDocument.CreatedBy,
-                    LastUpdatedBy = icomingDocument.LastUpdatedBy,
-                    CreatedTime = icomingDocument.CreatedTime,
-                    LastUpdatedTime = icomingDocument.LastUpdatedTime,
-                })
-                .ToListAsync();
-
-            return new BasePaginatedList<IncomingDocumentResponseDTO>(incomingDocuments, totalItems, currentPage, currentPageSize);
-        }
-        public async Task<BasePaginatedList<IncomingDocumentResponseDTO>> Get(string? id, string? Title, Guid userid, DateTime duedate, int pageSize, int pageIndex)
-        {
-            IQueryable<IncomingDocument>? query = _unitOfWork.GetRepository<IncomingDocument>().Entities.Where(l => l.DeletedTime == null);
+            IQueryable<IncomingDocument>? query = _unitOfWork.GetRepository<IncomingDocument>().Entities.Where(doc => doc.DeletedTime == null);
             if (!string.IsNullOrWhiteSpace(id))
             {
                 query = query.Where(incomingDocument => incomingDocument.Id == id);
@@ -100,7 +76,7 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 query = query.Where(incomingDocument => incomingDocument.IncomingDocumentTitle == Title);
             }
-            if (userid != Guid.Empty)
+            if (userid != null)
             {
                 query = query.Where(incomingDocument => incomingDocument.UserId == userid);
             }
@@ -108,11 +84,34 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 query = query.Where(incomingDocument => incomingDocument.DueDate == duedate);
             }
-            return await PaginateIncomingDocument(query, pageIndex, pageSize);
+            int totalItems = await query.CountAsync();
+
+            List<IncomingDocumentResponseDTO>? outgoingDocuments = await query
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .Select(doc => new IncomingDocumentResponseDTO
+                {
+                    Id = doc.Id,
+                    IncomingDocumentContent = doc.IncomingDocumentContent,
+                    IncomingDocumentTitle = doc.IncomingDocumentTitle,
+                    IncomingDocumentProcessingStatuss = doc.IncomingDocumentProcessingStatuss.ToString(),
+                    UserId = doc.UserId,
+                    DepartmentId = doc.DepartmentId,
+                    FileScanUrl = doc.FileScanUrl,
+                    ReceivedDate = doc.ReceivedDate,
+                    DueDate = doc.DueDate,
+                    LastUpdatedBy = doc.LastUpdatedBy,
+                    LastUpdatedTime = doc.LastUpdatedTime,
+                    CreatedBy = doc.CreatedBy,
+                    CreatedTime = doc.CreatedTime,
+                })
+                .ToListAsync();
+
+            return new BasePaginatedList<IncomingDocumentResponseDTO>(outgoingDocuments, totalItems, pageIndex, pageSize);
         }
 
 
-        public async Task Update(string? id, IncomingDocumentModelViews incomingdocumentView)
+        public async Task Update(string id, IncomingDocumentModelViews incomingdocumentView)
         {
             string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (string.IsNullOrWhiteSpace(UserId))

@@ -3,7 +3,7 @@
     public class CompanyResponseDTO
     {
         public string Id { get; set; }
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public string CompanyName { get; set; }
         public string CompanyAddress { get; set; }
         public string CompanyPhone { get; set; }

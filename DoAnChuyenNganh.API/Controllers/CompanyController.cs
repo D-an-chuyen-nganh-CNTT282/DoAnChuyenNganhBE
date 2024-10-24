@@ -39,7 +39,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         }
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
         [HttpDelete]
-        public async Task<IActionResult> DeleteLecturer(string id)
+        public async Task<IActionResult> DeleteCompany(string id)
         {
             await  _CompanyService.DeleteCompany(id);
             return Ok(BaseResponse<string>.OkResponse("Xóa thông tin công ty thành công!"));

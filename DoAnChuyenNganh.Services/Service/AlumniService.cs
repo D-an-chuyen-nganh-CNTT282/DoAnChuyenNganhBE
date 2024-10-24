@@ -77,7 +77,7 @@ namespace DoAnChuyenNganh.Services.Service
 
             return new BasePaginatedList<AlumniResponseDTO>(alumnis, totalItems, currentPage, currentPageSize);
         }
-        public async Task<BasePaginatedList<AlumniResponseDTO>> Get(string id, string alumniName, string alumniMajor, string alumniCourse, int pageSize, int pageIndex)
+        public async Task<BasePaginatedList<AlumniResponseDTO>> Get(string? id, string? alumniName, string? alumniMajor, string? alumniCourse, int pageSize, int pageIndex)
         {
 
             IQueryable<Alumni>? query = _unitOfWork.GetRepository<Alumni>().Entities.Where(l => l.DeletedTime == null);

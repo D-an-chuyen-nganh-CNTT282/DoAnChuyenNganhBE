@@ -68,7 +68,7 @@ namespace DoAnChuyenNganh.Services.Service
 
             return new BasePaginatedList<AlumniActivitiesResponseDTO>(alumniActivities, totalItems, currentPage, currentPageSize);
         }
-        public async Task<BasePaginatedList<AlumniActivitiesResponseDTO>> GetAlumniActivities(string id, string? alumniId, string? activitiesId, int pageIndex, int pageSize)
+        public async Task<BasePaginatedList<AlumniActivitiesResponseDTO>> GetAlumniActivities(string? id, string? alumniId, string? activitiesId, int pageIndex, int pageSize)
         {
             IQueryable<AlumniActivities>? query = _unitOfWork.GetRepository<AlumniActivities>().Entities.Where(l => l.DeletedTime == null);
 
@@ -88,7 +88,7 @@ namespace DoAnChuyenNganh.Services.Service
             return await PaginateAlumniActivities(query, pageIndex, pageSize);
         }
 
-        public async Task DeleteAlumniActivities(string id)
+        public async Task DeleteAlumniActivities(string id,string alumniId, string activitiesId)
         {
             string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (string.IsNullOrWhiteSpace(UserId))
@@ -97,13 +97,22 @@ namespace DoAnChuyenNganh.Services.Service
             }
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động cựu sinh viên!");
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động giảng viên!");
             }
-            AlumniActivities? alumniActivities = await _unitOfWork.GetRepository<AlumniActivities>().GetByIdAsync(id)
-                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy hoạt động cựu sinh viên nào với mã {id}!");
+            if (string.IsNullOrEmpty(activitiesId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động!");
+            }
+            if (string.IsNullOrEmpty(alumniId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã giảng viên!");
+            }
+            AlumniActivities? alumniActivities = await _unitOfWork.GetRepository<AlumniActivities>()
+                .Entities.FirstOrDefaultAsync(a => a.Id == id && a.AlumniId == alumniId && a.ActivitiesId == activitiesId)
+                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy hoạt động giảng viên nào với mã {id}");
             if (alumniActivities.DeletedTime != null)
             {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, "Thông tin hoạt động cựu sinh viên đã bị xóa!");
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, "Hoạt động giảng viên đã bị xóa!");
             }
             alumniActivities.DeletedBy = UserId;
             alumniActivities.DeletedTime = CoreHelper.SystemTimeNow;

@@ -46,7 +46,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
         [HttpGet]
-        public async Task<IActionResult> Get( string? id, string? title, Guid userId, DateTime dueDate, int pageSize = 10, int pageIndex = 1)
+        public async Task<IActionResult> Get( string? id, string? title, Guid? userId, DateTime? dueDate, int pageSize = 10, int pageIndex = 1)
         {
             BasePaginatedList<IncomingDocumentResponseDTO>? paginatedIncomingDocument = await _incomingDocumentService.Get(id, title, userId, dueDate, pageSize, pageIndex);
             return Ok(BaseResponse<BasePaginatedList<IncomingDocumentResponseDTO>>.OkResponse(paginatedIncomingDocument));

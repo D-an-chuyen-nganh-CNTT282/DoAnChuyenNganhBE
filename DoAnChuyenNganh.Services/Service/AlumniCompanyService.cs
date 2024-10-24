@@ -69,7 +69,7 @@ namespace DoAnChuyenNganh.Services.Service
 
             return new BasePaginatedList<AlumniCompanyResponseDTO>(alumnicompanys, totalItems, currentPage, currentPageSize);
         }
-        public async Task<BasePaginatedList<AlumniCompanyResponseDTO>> GetAlumniCompany(string id, string? alumniId, string? companyId, int pageIndex, int pageSize)
+        public async Task<BasePaginatedList<AlumniCompanyResponseDTO>> GetAlumniCompany(string? id, string? alumniId, string? companyId, int pageIndex, int pageSize)
         {
             IQueryable<AlumniCompany>? query = _unitOfWork.GetRepository<AlumniCompany>().Entities.Where(l => l.DeletedTime == null);
 
@@ -125,6 +125,38 @@ namespace DoAnChuyenNganh.Services.Service
                 LastUpdatedTime = CoreHelper.SystemTimeNow
             };
             await _unitOfWork.GetRepository<AlumniCompany>().InsertAsync(newAlumniCompany);
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task DeleteAlumniCompany(string id, string alumniId, string companyId)
+        {
+            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrWhiteSpace(UserId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
+            }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động giảng viên!");
+            }
+            if (string.IsNullOrEmpty(companyId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động!");
+            }
+            if (string.IsNullOrEmpty(alumniId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã giảng viên!");
+            }
+            AlumniCompany? alumniCompany = await _unitOfWork.GetRepository<AlumniCompany>()
+                .Entities.FirstOrDefaultAsync(a => a.Id == id && a.AlumniId == alumniId && a.CompanyId == companyId)
+                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy hoạt động giảng viên nào với mã {id}");
+            if (alumniCompany.DeletedTime != null)
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, "Hoạt động giảng viên đã bị xóa!");
+            }
+            alumniCompany.DeletedBy = UserId;
+            alumniCompany.DeletedTime = CoreHelper.SystemTimeNow;
+            await _unitOfWork.GetRepository<AlumniCompany>().UpdateAsync(alumniCompany);
             await _unitOfWork.SaveAsync();
         }
     }

@@ -18,7 +18,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] AlumniModelView model)
+        public async Task<IActionResult> Create( AlumniModelView model)
         {
             await _Ialumniservice.Create(model);
             return Ok(BaseResponse<string>.OkResponse("Đã tạo thành công"));

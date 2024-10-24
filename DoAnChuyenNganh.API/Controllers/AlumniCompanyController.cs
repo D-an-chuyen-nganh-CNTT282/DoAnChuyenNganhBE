@@ -46,7 +46,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         public async Task<IActionResult> DeleteAlumniCompany(string id, string alumniId, string companyId)
         {
             await _alumniCompanyService.DeleteAlumniCompany(id, alumniId, companyId);
-            return Ok(BaseResponse<string>.OkResponse("Xóa hoạt động cựu sinh viên thành công!"));
+            return Ok(BaseResponse<string>.OkResponse("Xóa công ty cựu sinh viên thành công!"));
         }
     }
 }

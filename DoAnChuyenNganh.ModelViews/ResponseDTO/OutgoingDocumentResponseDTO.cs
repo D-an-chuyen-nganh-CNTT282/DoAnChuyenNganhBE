@@ -15,5 +15,6 @@
         public string? LastUpdatedBy { get; set; }
         public DateTimeOffset CreatedTime { get; set; }
         public DateTimeOffset? LastUpdatedTime { get; set; }
+        public string FileScanUrl { get; set; }
     }
 }

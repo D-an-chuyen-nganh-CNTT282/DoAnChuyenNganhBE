@@ -22,6 +22,7 @@ namespace DoAnChuyenNganh.Contract.Repositories.Entity
         public required Guid UserId { get; set; }
         public required OutgoingDocumentProcessingStatus OutgoingDocumentProcessingStatuss { get; set; }
         public DateTime DueDate { get; set; }
+        public string FileScanUrl { get; set; }
         [ForeignKey("DepartmentId")]
         public virtual Department Department { get; set; } = null!;
         public virtual ApplicationUser User { get; set; }

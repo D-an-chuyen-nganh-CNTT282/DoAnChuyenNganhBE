@@ -10,6 +10,8 @@ using DoAnChuyenNganh.ModelViews.OutgoingDocumentModelViews;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using DoAnChuyenNganh.Repositories.Entity;
+using Microsoft.AspNetCore.Identity;
 
 namespace DoAnChuyenNganh.Services.Service
 {
@@ -18,16 +20,28 @@ namespace DoAnChuyenNganh.Services.Service
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public OutgoingDocumentService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IEmailService _emailService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public OutgoingDocumentService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, UserManager<ApplicationUser> userManager)
         {
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _emailService = emailService;
+            _userManager = userManager;
         }
 
         public async Task CreateOutgoingDocument(OutgoingDocumentModelView outgoingDocumentModelView)
         {
+            Department? department = await _unitOfWork.GetRepository<Department>()
+                .Entities
+                .FirstOrDefaultAsync(d => d.Id == outgoingDocumentModelView.DepartmentId);
+
+            if (department == null)
+            {
+                throw new KeyNotFoundException($"Phòng ban với mã {outgoingDocumentModelView.DepartmentId} không tìm thấy.");
+            }
+
             string? userId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrWhiteSpace(userId))
@@ -43,6 +57,38 @@ namespace DoAnChuyenNganh.Services.Service
 
             await _unitOfWork.GetRepository<OutgoingDocument>().InsertAsync(outgoingDocument);
             await _unitOfWork.SaveAsync();
+
+            ApplicationUser? user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                throw new KeyNotFoundException($"Người dùng với mã {userId} không tìm thấy.");
+            }
+            string toEmail = outgoingDocument.RecipientEmail;
+            string subject = $"{outgoingDocument.OutgoingDocumentTitle}";
+            string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
+            string body = $@"
+                <p>Kính gửi đại diện {department.DepartmentName},</p>
+                <p>Tôi tên là {user.Name}, đại diện cho văn phòng Khoa Công nghệ thông tin. Xin phép viết email này để gửi đến văn phòng {department.DepartmentName} một công văn về {outgoingDocument.OutgoingDocumentContent}. Vui lòng xem chi tiết công văn theo link đính kèm bên dưới.</p>
+                <p>Link đính kèm: {outgoingDocument.FileScanUrl}.
+                <p>Vui lòng phản hồi lại với chúng tôi trước ngày {outgoingDocument.DueDate}</p>
+                <p>Trân trọng.</p>
+                <br>
+                -------------------------
+                <br>
+                <table style='width:100%; margin-top:20px;'>
+                    <tr>
+                        <td style='width:20%; vertical-align:top;'>
+                            <img src='{logoUrl}' alt='System Logo' width='150' height='150' style='display:block;'/>
+                        </td>
+                        <td style='width:80%; vertical-align:top; padding-left:10px;'>
+                            <p><strong>Thông tin liên hệ:</strong></p>
+                            <p>Đại diện: {user.Name}</p>
+                            <p>Email: {user.Email}</p>
+                            <p>Điện thoại: {user.PhoneNumber}</p>
+                        </td>
+                    </tr>
+                </table>";
+            await _emailService.SendEmailAsync(toEmail, subject, body);
         }
 
         public async Task<BasePaginatedList<OutgoingDocumentResponseDTO>> GetOutgoingDocuments(string? title, string? departmentId, Guid? userId, int pageIndex, int pageSize)

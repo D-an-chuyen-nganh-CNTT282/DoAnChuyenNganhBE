@@ -18,7 +18,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         public async Task<IActionResult> AddUserWithRoleAsync(UserModelView userModel)
         {
             await _userService.AddUserWithRoleAsync(userModel);
-            return Ok(BaseResponse<object>.OkResponse("Create user successfully"));
+            return Ok(BaseResponse<object>.OkResponse("Tạo tài khoản người dùng thành công"));
         }
 
         [HttpPut]
@@ -26,7 +26,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdateModelView userModel)
         {
             await _userService.UpdateUser(userModel);
-            return Ok(BaseResponse<object>.OkResponse("Update user successfully"));
+            return Ok(BaseResponse<object>.OkResponse("Cập nhật thông tin thành công"));
         }
 
         [HttpPatch("Reset_Password_User")]
@@ -34,7 +34,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         public async Task<IActionResult> UpdateUserByAdmin([FromQuery] string userId, [FromBody] UserUpdateByAdminModel userModel)
         {
             await _userService.UpdateUserByAdmin(userId, userModel);
-            return Ok(BaseResponse<object>.OkResponse("Update user successfully"));
+            return Ok(BaseResponse<object>.OkResponse("Cập nhật mật khẩu cho người dùng thành công"));
         }
 
         [HttpDelete]
@@ -43,7 +43,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         {
 
             await _userService.DeleteUser(userId);
-            return Ok(BaseResponse<object>.OkResponse("Delete user successfully"));
+            return Ok(BaseResponse<object>.OkResponse("Xóa người dùng thành công"));
         }
 
 

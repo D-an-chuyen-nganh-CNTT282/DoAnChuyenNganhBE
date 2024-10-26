@@ -68,10 +68,12 @@ namespace DoAnChuyenNganh.Services.Service
             string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
             string body = $@"
                 <p>Kính gửi đại diện {department.DepartmentName},</p>
-                <p>Tôi tên là {user.Name}, đại diện cho văn phòng Khoa Công nghệ thông tin. Xin phép viết email này để gửi đến văn phòng {department.DepartmentName} một công văn về {outgoingDocument.OutgoingDocumentContent}. Vui lòng xem chi tiết công văn theo link đính kèm bên dưới.</p>
+                <p>Tôi là {user.Name}, đại diện cho văn phòng Khoa Công nghệ thông tin. Xin được gửi đến văn phòng {department.DepartmentName} một văn bản về {outgoingDocument.OutgoingDocumentContent}. Vui lòng xem chi tiết công văn theo link đính kèm bên dưới.</p>
                 <p>Link đính kèm: {outgoingDocument.FileScanUrl}.
-                <p>Vui lòng phản hồi lại với chúng tôi trước ngày {outgoingDocument.DueDate}</p>
-                <p>Trân trọng.</p>
+                <p>Vui lòng phản hồi lại với chúng tôi trước ngày {outgoingDocument.DueDate:dd/MM/yyyy} trong giờ làm việc.</p>
+                <p>Trân trọng,</p>
+                <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
+                <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>
                 <br>
                 -------------------------
                 <br>

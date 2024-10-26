@@ -24,7 +24,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             await _authService.ChangePassword(model);
-            return Ok(BaseResponse<string>.OkResponse("Change password success"));
+            return Ok(BaseResponse<string>.OkResponse("Đổi mật khẩu thành công"));
         }
 
         [HttpPost("RefreshToken")]

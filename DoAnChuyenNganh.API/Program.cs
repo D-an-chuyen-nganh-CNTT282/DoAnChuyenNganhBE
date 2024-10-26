@@ -1,4 +1,5 @@
 using DoAnChuyenNganh.Contract.Services.Configs;
+using DoAnChuyenNganh.Services.EmailSettings;
 using DoAnChuyenNganhBE.API;
 using DoAnChuyenNganhBE.API.Middleware;
 using dotenv.net;
@@ -23,7 +24,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
 
     });
-
+builder.Services.AddHostedService<EmailReminderService>();
 
 
 builder.Services.AddEndpointsApiExplorer();

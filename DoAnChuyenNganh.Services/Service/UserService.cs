@@ -110,9 +110,12 @@ namespace DoAnChuyenNganh.Services.Service
 
         public async Task AddUserWithRoleAsync(UserModelView userModel)
         {
-            string? handleBy = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-             ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Token không hợp lệ");
-
+            string? handleBy = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(handleBy))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Token không hợp lệ");
+            }
+            ApplicationUser? user = await userManager.FindByIdAsync(handleBy);
             ApplicationUser? userExists = await userManager.FindByEmailAsync(userModel.Email);
             if (userExists != null)
             {
@@ -129,8 +132,31 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 ApplicationRole? role = await roleManager.FindByIdAsync(userModel.RoleId);
                 await userManager.AddToRoleAsync(newUser, role.Name);
-                await emailService.SendEmailAsync(userModel.Email, "Tài khoản giảng viên",
-                      $"Mật khẩu của bạn là: {passwordChars}");
+                string toEmail = userModel.Email;
+                string subject = "Cấp tài khoản sử dụng hệ thống";
+                string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
+                string body = $@"
+                <p>Mật khẩu của bạn là: {passwordChars}.</p>
+                <p>Trân trọng.</p>
+                <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
+                <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>
+                <br>
+                -------------------------
+                <br>
+                <table style='width:100%; margin-top:20px;'>
+                    <tr>
+                        <td style='width:20%; vertical-align:top;'>
+                            <img src='{logoUrl}' alt='System Logo' width='150' height='150' style='display:block;'/>
+                        </td>
+                        <td style='width:80%; vertical-align:top; padding-left:10px;'>
+                            <p><strong>Thông tin liên hệ:</strong></p>
+                            <p>Đại diện: {user.Name}</p>
+                            <p>Email: {user.Email}</p>
+                            <p>Điện thoại: {user.PhoneNumber}</p>
+                        </td>
+                    </tr>
+                </table>";
+                await emailService.SendEmailAsync(toEmail, subject, body);
                 await _unitOfWork.SaveAsync();
             }
             else
@@ -163,6 +189,7 @@ namespace DoAnChuyenNganh.Services.Service
 
             string? handleBy = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
              ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Token không hợp lệ");
+            ApplicationUser? user = await userManager.FindByIdAsync(handleBy);
             ApplicationUser? userExists = await userManager.FindByIdAsync(userID)
              ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, "Người dùng không tồn tại hoặc đã bị xóa");
 
@@ -170,8 +197,32 @@ namespace DoAnChuyenNganh.Services.Service
 
             userExists.UserName = model.Email;
             userExists.LastUpdatedBy = handleBy;
-            await emailService.SendEmailAsync(model.Email, "Cấp lại mật khẩu",
-                $"Mật khẩu của bạn là: {model.Password}");
+            string toEmail = model.Email;
+            string subject = "Cấp lại mật khẩu cho tài khoản";
+            string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
+            string body = $@"
+                <p>Mật khẩu của bạn vừa được thay đổi: {model.Password}.</p>
+                <p>Vui lòng đăng nhập theo mật khẩu vừa được cấp và thay đổi lại theo ý bạn tại giao diện Đổi mật khẩu.</p>
+                <p>Trân trọng.</p>
+                <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
+                <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>
+                <br>
+                -------------------------
+                <br>
+                <table style='width:100%; margin-top:20px;'>
+                    <tr>
+                        <td style='width:20%; vertical-align:top;'>
+                            <img src='{logoUrl}' alt='System Logo' width='150' height='150' style='display:block;'/>
+                        </td>
+                        <td style='width:80%; vertical-align:top; padding-left:10px;'>
+                            <p><strong>Thông tin liên hệ:</strong></p>
+                            <p>Đại diện: {user.Name}</p>
+                            <p>Email: {user.Email}</p>
+                            <p>Điện thoại: {user.PhoneNumber}</p>
+                        </td>
+                    </tr>
+                </table>";
+            await emailService.SendEmailAsync(toEmail, subject, body);
 
             if (!string.IsNullOrEmpty(model.Password))
             {

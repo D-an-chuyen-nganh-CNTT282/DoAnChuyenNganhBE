@@ -168,20 +168,6 @@ namespace DoAnChuyenNganh.Services.Service
                 }
             };
         }
-        public async Task ForgotPassword(EmailModelView emailModelView)
-        {
-            ApplicationUser? user = await userManager.FindByEmailAsync(emailModelView.Email)
-             ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Vui lòng kiểm tra email của bạn");
-            if (!await userManager.IsEmailConfirmedAsync(user))
-            {
-                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Vui lòng kiểm tra email của bạn");
-            }
-            string OTP = GenerateOtp();
-            string cacheKey = $"OTPResetPassword_{emailModelView.Email}";
-            memoryCache.Set(cacheKey, OTP, TimeSpan.FromMinutes(1));
-            await emailService.SendEmailAsync(emailModelView.Email, "Đặt lại mật khẩu",
-                       $"Vui lòng xác nhận tài khoản của bạn, OTP của bạn là:  <div class='otp'>{OTP}</div>");
-        }
         #endregion
     }
 }

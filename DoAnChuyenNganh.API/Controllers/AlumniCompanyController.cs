@@ -35,7 +35,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         }
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateAlumniCompany(string id, string alumniId, string CompanyId,  AlumniCompanyModelView alumniCompanyModelView)
         {
             await _alumniCompanyService.UpdateAlumniCompany(id,alumniId, CompanyId, alumniCompanyModelView);

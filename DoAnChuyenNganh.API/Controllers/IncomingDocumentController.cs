@@ -28,7 +28,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         }
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(string id)
         {
             await _incomingDocumentService.Delete(id);
@@ -37,7 +37,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         }
 
         [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> Update(string id,IncomingDocumentModelViews model)
         {
             await _incomingDocumentService.Update(id, model);

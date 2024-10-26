@@ -1,6 +1,7 @@
 ﻿using DoAnChuyenNganh.Contract.Repositories.Entity;
 using DoAnChuyenNganh.Contract.Repositories.Interface;
 using DoAnChuyenNganh.Contract.Services.Interface;
+using DoAnChuyenNganh.Core.Utils;
 using DoAnChuyenNganh.Repositories.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace DoAnChuyenNganh.Services.EmailSettings
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                await UpdateDeletedTimeForDocuments();
                 await SendOutgoingDocumentDueDateReminders();
                 await SendIncomingDocumentDueDateReminders();
                 await Task.Delay(TimeSpan.FromHours(24), stoppingToken); // Thực thi mỗi ngày một lần
@@ -143,5 +145,40 @@ namespace DoAnChuyenNganh.Services.EmailSettings
                 }
             }
         }
+        private async Task UpdateDeletedTimeForDocuments()
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+            var incomingDocs = await unitOfWork.GetRepository<IncomingDocument>()
+                .Entities
+                .Where(doc => doc.DueDate.Date < DateTime.Now.Date && doc.DeletedTime == null)
+                .ToListAsync();
+
+            foreach (var doc in incomingDocs)
+            {
+                doc.DeletedTime = CoreHelper.SystemTimeNow; 
+                doc.IncomingDocumentProcessingStatuss = IncomingDocument.IncomingDocumentProcessingStatus.Overdue; 
+                unitOfWork.GetRepository<IncomingDocument>().Update(doc); 
+                _logger.LogInformation($"Cập nhật DeletedTime và trạng thái cho Incoming document: {doc.IncomingDocumentTitle}");
+            }
+
+            
+            var outgoingDocs = await unitOfWork.GetRepository<OutgoingDocument>()
+                .Entities
+                .Where(doc => doc.DueDate.Date < DateTime.Now.Date && doc.DeletedTime == null)
+                .ToListAsync();
+
+            foreach (var doc in outgoingDocs)
+            {
+                doc.DeletedTime = CoreHelper.SystemTimeNow; 
+                doc.OutgoingDocumentProcessingStatuss = OutgoingDocument.OutgoingDocumentProcessingStatus.Overdue; 
+                unitOfWork.GetRepository<OutgoingDocument>().Update(doc); 
+                _logger.LogInformation($"Cập nhật DeletedTime và trạng thái cho Outgoing document: {doc.OutgoingDocumentTitle}");
+            }
+
+            await unitOfWork.SaveAsync(); 
+        }
+
     }
 }

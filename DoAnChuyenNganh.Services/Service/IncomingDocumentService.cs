@@ -127,6 +127,7 @@ namespace DoAnChuyenNganh.Services.Service
             _mapper.Map(incomingdocumentView, incomingDocument);
             incomingDocument.LastUpdatedTime = CoreHelper.SystemTimeNow;
             incomingDocument.LastUpdatedBy = UserId;
+            incomingDocument.UserId = Guid.Parse(UserId);
             await _unitOfWork.GetRepository<IncomingDocument>().UpdateAsync(incomingDocument);
             await _unitOfWork.SaveAsync();
         }

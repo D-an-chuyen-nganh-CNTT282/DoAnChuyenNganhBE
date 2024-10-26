@@ -127,6 +127,7 @@ namespace DoAnChuyenNganh.Services.Service
             _mapper.Map(companyModelView, company);
             company.LastUpdatedTime = CoreHelper.SystemTimeNow;
             company.LastUpdatedBy = UserId;
+            company.UserId = Guid.Parse(UserId);
             await _unitOfWork.GetRepository<Company>().UpdateAsync(company);
             await _unitOfWork.SaveAsync();
         }

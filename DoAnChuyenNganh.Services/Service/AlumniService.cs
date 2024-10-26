@@ -121,6 +121,7 @@ namespace DoAnChuyenNganh.Services.Service
             _mapper.Map(alumniView, alumni);
             alumni.LastUpdatedTime = CoreHelper.SystemTimeNow;
             alumni.LastUpdatedBy = UserId;
+            alumni.UserId = Guid.Parse(UserId);
             await _unitOfWork.GetRepository<Alumni>().UpdateAsync(alumni);
             await _unitOfWork.SaveAsync();
         }

@@ -120,6 +120,12 @@ namespace DoAnChuyenNganhBE.API
             services.AddHttpContextAccessor();
             services.AddScoped<DepartmentManager>();
             services.AddScoped<LecturerManager>();
+            services.AddScoped<IIncomingDocumentService, IncomingDocumentService>();
+            services.AddScoped<IAlumniService, AlumniService>();
+            services.AddScoped<IAlumniActivitiesService, AlumniActivitiesService>();
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IAlumniCompanyService, AlumniCompanyService>();
+
         }
         public static void AddAutoMapperConfig(this IServiceCollection services)
         {

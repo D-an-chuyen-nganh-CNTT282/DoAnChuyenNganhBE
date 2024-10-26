@@ -13,7 +13,7 @@
 
         public string IncomingDocumentContent { get; set; }
 
-        public DateTime ReceivedDate { get; set; }
+        public DateTime ReceivedDate { get;} = DateTime.Now;
 
         public string DepartmentId { get; set; }
 

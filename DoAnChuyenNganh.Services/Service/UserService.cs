@@ -136,7 +136,7 @@ namespace DoAnChuyenNganh.Services.Service
                 string subject = "Cấp tài khoản sử dụng hệ thống";
                 string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
                 string body = $@"
-                <p>Mật khẩu của bạn là: {passwordChars}.</p>
+                <p>Mật khẩu của bạn là: <strong>{passwordChars}</strong>.</p>
                 <p>Trân trọng.</p>
                 <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
                 <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>
@@ -201,7 +201,7 @@ namespace DoAnChuyenNganh.Services.Service
             string subject = "Cấp lại mật khẩu cho tài khoản";
             string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
             string body = $@"
-                <p>Mật khẩu của bạn vừa được thay đổi: {model.Password}.</p>
+                <p>Mật khẩu của bạn vừa được thay đổi: <strong>{model.Password}</strong>.</p>
                 <p>Vui lòng đăng nhập theo mật khẩu vừa được cấp và thay đổi lại theo ý bạn tại giao diện Đổi mật khẩu.</p>
                 <p>Trân trọng.</p>
                 <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>

@@ -50,7 +50,7 @@ namespace DoAnChuyenNganh.Services.EmailSettings
                 string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
                 string body = $@"
                 <p>Kính gửi đại diện {department.DepartmentName},</p>
-                <p>Văn bản '{doc.OutgoingDocumentTitle}' yêu cầu phản hồi trước ngày {doc.DueDate:dd/MM/yyyy}.</p>
+                <p>Văn bản '{doc.OutgoingDocumentTitle}' yêu cầu phản hồi trước ngày <strong style='color:red;'>{doc.DueDate:dd/MM/yyyy}</strong>.</p>
                 <p>Vui lòng kiểm tra và phản hồi sớm nhất có thể.</p>
                 <p>Trân trọng,</p>
                 <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
@@ -110,8 +110,8 @@ namespace DoAnChuyenNganh.Services.EmailSettings
                 string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
                 string body = $@"
                 <p>Kính gửi giảng viên {user.Name},</p>
-                <p>Văn bản '{doc.IncomingDocumentTitle}' yêu cầu phản hồi trước ngày {doc.DueDate:dd/MM/yyyy}.</p>
-                <P>Vui lòng kiểm tra và phản hồi với {department.DepartmentName} sớm nhất có thể.</p>
+                <p>Văn bản '{doc.IncomingDocumentTitle}' yêu cầu phản hồi trước ngày <strong style='color:red;'>{doc.DueDate:dd/MM/yyyy}</strong>.</p>
+                <p>Vui lòng kiểm tra và phản hồi với {department.DepartmentName} sớm nhất có thể.</p>
                 <p>Trân trọng,</p>
                 <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
                 <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>

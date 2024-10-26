@@ -65,7 +65,7 @@ namespace DoAnChuyenNganh.Services.Service
                 <p>Kính gửi giảng viên {user.Name},</p>
                 <p>Bạn vừa nhận được một công văn mới từ {department.DepartmentName} với nội dung về {incomingdocumentView.IncomingDocumentContent}. Vui lòng xem chi tiết công văn theo link đính kèm bên dưới.</p>
                 <p>Link đính kèm: {incomingdocumentView.FileScanUrl}.
-                <p>Vui lòng phản hồi công văn này với {department.DepartmentName} trước ngày {incomingdocumentView.DueDate:dd/MM/yyyy} trong giờ làm việc.</p>
+                <p>Vui lòng phản hồi công văn này với {department.DepartmentName} trước ngày <strong>{incomingdocumentView.DueDate:dd/MM/yyyy}</strong> trong giờ làm việc.</p>
                 <p>Trân trọng,</p>
                 <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
                 <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>

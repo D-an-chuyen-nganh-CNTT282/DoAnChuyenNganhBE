@@ -19,6 +19,11 @@ using DoAnChuyenNganh.ModelViews.UserModelViews;
 using DoAnChuyenNganh.Repositories.Entity;
 using DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews;
 using DoAnChuyenNganh.ModelViews.OutgoingDocumentModelViews;
+using DoAnChuyenNganh.ModelViews.AlumniActivitiesModelViews;
+using DoAnChuyenNganh.ModelViews.AlumniCompanyModelViews;
+using DoAnChuyenNganh.ModelViews.AlumniModelViews;
+using DoAnChuyenNganh.ModelViews.CompanyModelViews;
+using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
 
 namespace DoAnChuyenNganh.Services.Mapping
 {
@@ -79,6 +84,19 @@ namespace DoAnChuyenNganh.Services.Mapping
 
             CreateMap<OutgoingDocument, OutgoingDocumentModelView>().ReverseMap();
             CreateMap<OutgoingDocumentResponseDTO, OutgoingDocument>().ReverseMap();
+
+            CreateMap<Company, CompanyResponseDTO>().ReverseMap();
+            CreateMap<CompanyModelViews, Company>().ReverseMap();
+
+            CreateMap<Alumni, AlumniResponseDTO>().ReverseMap();
+            CreateMap<AlumniModelView, Alumni>().ReverseMap();
+            CreateMap<IncomingDocument, IncomingDocumentResponseDTO>().ReverseMap();
+            CreateMap<IncomingDocumentModelViews, IncomingDocument>().ReverseMap();
+            CreateMap<AlumniCompany, AlumniCompanyResponseDTO>().ReverseMap();
+            CreateMap<AlumniCompanyModelView, AlumniCompany>().ReverseMap();
+
+            CreateMap<AlumniActivities, AlumniActivitiesResponseDTO>().ReverseMap();
+            CreateMap<AlumniActivitiesModelView, AlumniActivities>().ReverseMap();
 
         }
     }

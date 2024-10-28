@@ -1,10 +1,8 @@
 ﻿using DoAnChuyenNganh.Contract.Services.Interface;
 using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.BusinessCollaborationModelViews;
-using DoAnChuyenNganh.ModelViews.BusinessModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoAnChuyenNganhBE.API.Controllers

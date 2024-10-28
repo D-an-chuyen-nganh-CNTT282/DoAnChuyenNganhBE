@@ -6,16 +6,10 @@ using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.Core.Store;
 using DoAnChuyenNganh.Core.Utils;
 using DoAnChuyenNganh.ModelViews.CompanyModelViews;
-using DoAnChuyenNganh.ModelViews.LecturerModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoAnChuyenNganh.Services.Service
 {

@@ -18,12 +18,14 @@ namespace DoAnChuyenNganh.Services.Service
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public StudentExpectationsService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper)
+        public StudentExpectationsService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper, ICloudinaryService cloudinaryService)
         {
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task CreateStudentExpectations(StudentExpectationsModelView studentExpectationsModelView)
@@ -34,9 +36,15 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
-
+            string fileUrl = null;
+            if (studentExpectationsModelView.FileScanUrl != null)
+            {
+                // Giả sử bạn đã có ICloudinaryService
+                fileUrl = await _cloudinaryService.UploadFileAsync(studentExpectationsModelView.FileScanUrl);
+            }
             StudentExpectations studentExpectations = _mapper.Map<StudentExpectations>(studentExpectationsModelView);
 
+            studentExpectations.FileScanUrl = fileUrl;
             studentExpectations.UserId = Guid.Parse(userId);
             studentExpectations.CreatedBy = userId;
             studentExpectations.CreatedTime = CoreHelper.SystemTimeNow;
@@ -63,8 +71,19 @@ namespace DoAnChuyenNganh.Services.Service
 
             StudentExpectations? studentExpectations = await _unitOfWork.GetRepository<StudentExpectations>().GetByIdAsync(id)
                 ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy yêu cầu nào với mã {id}");
+            string oldFileUrl = studentExpectations.FileScanUrl;
 
             _mapper.Map(studentExpectationsModelView, studentExpectations);
+
+            if (studentExpectationsModelView.FileScanUrl != null)
+            {
+                // Ghi đè file cũ bằng cách sử dụng publicId
+                var publicId = !string.IsNullOrEmpty(oldFileUrl)
+                    ? Path.GetFileNameWithoutExtension(new Uri(oldFileUrl).AbsolutePath)
+                    : null;
+
+                studentExpectations.FileScanUrl = await _cloudinaryService.UploadFileAsync(studentExpectationsModelView.FileScanUrl);
+            }
             studentExpectations.UserId = Guid.Parse(userId);
             studentExpectations.LastUpdatedBy = userId;
             studentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow;

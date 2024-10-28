@@ -136,7 +136,9 @@ namespace DoAnChuyenNganh.Services.Service
                 string subject = "Cấp tài khoản sử dụng hệ thống";
                 string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
                 string body = $@"
-                <p>Mật khẩu của bạn là: <strong>{passwordChars}</strong>.</p>
+                <p>Mật khẩu đăng nhập cho tài khoản {newUser.UserName} là: <strong style='color:chocolate;'>{passwordChars}</strong>.</p>
+                <p>Vui lòng đăng nhập vào hệ thống theo tài khoản trên và thay đổi mật khẩu lại theo ý bạn tại giao diện 'Đổi mật khẩu'.</p>
+                <p><i>(<span style='color:red;'>*</span>) Lưu ý: Không được chia sẻ thông tin tài khoản và mật khẩu cho người khác.</i></p>
                 <p>Trân trọng.</p>
                 <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
                 <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>
@@ -150,9 +152,9 @@ namespace DoAnChuyenNganh.Services.Service
                         </td>
                         <td style='width:80%; vertical-align:top; padding-left:10px;'>
                             <p><strong>Thông tin liên hệ:</strong></p>
-                            <p>Đại diện: {user.Name}</p>
-                            <p>Email: {user.Email}</p>
-                            <p>Điện thoại: {user.PhoneNumber}</p>
+                            <p><span style='color:blue;'>Đại diện:</span> {user.Name}</p>
+                            <p><span style='color:blue;'>Email:</span> {user.Email}</p>
+                            <p><span style='color:blue;'>Điện thoại:</span> {user.PhoneNumber}</p>
                         </td>
                     </tr>
                 </table>";
@@ -198,11 +200,12 @@ namespace DoAnChuyenNganh.Services.Service
             userExists.UserName = model.Email;
             userExists.LastUpdatedBy = handleBy;
             string toEmail = model.Email;
-            string subject = "Cấp lại mật khẩu cho tài khoản";
+            string subject = "Cấp lại mật khẩu đăng nhập cho tài khoản";
             string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
             string body = $@"
-                <p>Mật khẩu của bạn vừa được thay đổi: <strong>{model.Password}</strong>.</p>
-                <p>Vui lòng đăng nhập theo mật khẩu vừa được cấp và thay đổi lại theo ý bạn tại giao diện Đổi mật khẩu.</p>
+                <p>Mật khẩu  được cấp lại cho tài khoản {model.Email} là: <strong style='color:chocolate;'>{model.Password}</strong>.</p>
+                <p>Vui lòng đăng nhập theo mật khẩu vừa được cấp lại và thay đổi lại theo ý bạn tại giao diện 'Đổi mật khẩu'.</p>
+                <p><i>(<span style='color:red;'>*</span>) Lưu ý: Không được chia sẻ thông tin tài khoản và mật khẩu cho người khác.</i></p>
                 <p>Trân trọng.</p>
                 <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
                 <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>
@@ -216,9 +219,9 @@ namespace DoAnChuyenNganh.Services.Service
                         </td>
                         <td style='width:80%; vertical-align:top; padding-left:10px;'>
                             <p><strong>Thông tin liên hệ:</strong></p>
-                            <p>Đại diện: {user.Name}</p>
-                            <p>Email: {user.Email}</p>
-                            <p>Điện thoại: {user.PhoneNumber}</p>
+                            <p><span style='color:blue;'>Đại diện:</span> {user.Name}</p>
+                            <p><span style='color:blue;'>Email:</span> {user.Email}</p>
+                            <p><span style='color:blue;'>Điện thoại:</span> {user.PhoneNumber}</p>
                         </td>
                     </tr>
                 </table>";

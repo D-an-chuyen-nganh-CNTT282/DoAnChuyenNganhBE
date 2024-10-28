@@ -22,13 +22,15 @@ namespace DoAnChuyenNganh.Services.Service
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
         private readonly UserManager<ApplicationUser> _userManager;
-        public OutgoingDocumentService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, UserManager<ApplicationUser> userManager)
+        private readonly ICloudinaryService _cloudinaryService;
+        public OutgoingDocumentService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, UserManager<ApplicationUser> userManager, ICloudinaryService cloudinaryService)
         {
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _emailService = emailService;
             _userManager = userManager;
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task CreateOutgoingDocument(OutgoingDocumentModelView outgoingDocumentModelView)
@@ -48,9 +50,15 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
-
+            string fileUrl = null;
+            if (outgoingDocumentModelView.FileScanUrl != null)
+            {
+                // Giả sử bạn đã có ICloudinaryService
+                fileUrl = await _cloudinaryService.UploadFileAsync(outgoingDocumentModelView.FileScanUrl);
+            }
             OutgoingDocument outgoingDocument = _mapper.Map<OutgoingDocument>(outgoingDocumentModelView);
 
+            outgoingDocument.FileScanUrl = fileUrl;
             outgoingDocument.UserId = Guid.Parse(userId);
             outgoingDocument.CreatedBy = userId;
             outgoingDocument.CreatedTime = CoreHelper.SystemTimeNow;
@@ -68,9 +76,9 @@ namespace DoAnChuyenNganh.Services.Service
             string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
             string body = $@"
                 <p>Kính gửi đại diện {department.DepartmentName},</p>
-                <p>Tôi là {user.Name}, đại diện cho văn phòng Khoa Công nghệ thông tin. Xin được gửi đến văn phòng {department.DepartmentName} một văn bản về {outgoingDocument.OutgoingDocumentContent}. Vui lòng xem chi tiết công văn theo link đính kèm bên dưới.</p>
-                <p>Link đính kèm: {outgoingDocument.FileScanUrl}.
-                <p>Vui lòng phản hồi lại với chúng tôi trước ngày <strong>{outgoingDocument.DueDate:dd/MM/yyyy}</strong> trong giờ làm việc.</p>
+                <p>Tôi là {user.Name}, đại diện cho văn phòng Khoa Công nghệ thông tin. Xin được gửi đến văn phòng {department.DepartmentName} một văn bản về '{outgoingDocument.OutgoingDocumentContent}'. Vui lòng xem chi tiết công văn theo link đính kèm bên dưới.</p>
+                <p>Link đính kèm: {fileUrl}.
+                <p>Vui lòng phản hồi lại với chúng tôi trước ngày <strong style='color:limegreen;'>{outgoingDocument.DueDate:dd/MM/yyyy}</strong> trong giờ làm việc.</p>
                 <p>Trân trọng,</p>
                 <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
                 <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>
@@ -84,9 +92,9 @@ namespace DoAnChuyenNganh.Services.Service
                         </td>
                         <td style='width:80%; vertical-align:top; padding-left:10px;'>
                             <p><strong>Thông tin liên hệ:</strong></p>
-                            <p>Đại diện: {user.Name}</p>
-                            <p>Email: {user.Email}</p>
-                            <p>Điện thoại: {user.PhoneNumber}</p>
+                            <p><span style='color:blue;'>Đại diện:</span> {user.Name}</p>
+                            <p><span style='color:blue;'>Email:</span> {user.Email}</p>
+                            <p><span style='color:blue;'>Điện thoại:</span> {user.PhoneNumber}</p>
                         </td>
                     </tr>
                 </table>";

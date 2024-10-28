@@ -1,5 +1,4 @@
-﻿
-namespace DoAnChuyenNganh.ModelViews.UserModelViews
+﻿namespace DoAnChuyenNganh.ModelViews.UserModelViews
 {
     public class UserProfileResponseModelView
     {

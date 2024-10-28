@@ -1,4 +1,6 @@
-﻿namespace DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews
+﻿using Microsoft.AspNetCore.Http;
+
+namespace DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews
 {
     public class IncomingDocumentModelViews
     {
@@ -17,7 +19,7 @@
 
         public string DepartmentId { get; set; }
 
-        public required string FileScanUrl { get; set; }
+        public required IFormFile FileScanUrl { get; set; }
 
         public required IncomingDocumentProcessingStatus IncomingDocumentProcessingStatuss { get; set; }
 

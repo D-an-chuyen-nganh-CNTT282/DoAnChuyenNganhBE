@@ -1,4 +1,5 @@
-﻿
+﻿using Microsoft.AspNetCore.Http;
+
 namespace DoAnChuyenNganh.ModelViews.OutgoingDocumentModelViews
 {
     public class OutgoingDocumentModelView
@@ -17,6 +18,6 @@ namespace DoAnChuyenNganh.ModelViews.OutgoingDocumentModelViews
         public Guid UserId { get; set; }
         public required OutgoingDocumentProcessingStatus OutgoingDocumentProcessingStatuss { get; set; }
         public DateTime DueDate { get; } = DateTime.Now.AddDays(7);
-        public string FileScanUrl { get; set; }
+        public required IFormFile FileScanUrl { get; set; }
     }
 }

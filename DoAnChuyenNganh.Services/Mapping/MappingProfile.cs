@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DoAnChuyenNganh.Contract.Repositories.Entity;
 using DoAnChuyenNganh.ModelViews.ActivitiesModelViews;
-using DoAnChuyenNganh.ModelViews.AuthModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessCollaborationModelViews;
 using DoAnChuyenNganh.ModelViews.BusinessModelViews;
@@ -17,7 +16,6 @@ using DoAnChuyenNganh.ModelViews.StudentModelViews;
 using DoAnChuyenNganh.ModelViews.TeachingScheduleModelViews;
 using DoAnChuyenNganh.ModelViews.UserModelViews;
 using DoAnChuyenNganh.Repositories.Entity;
-using DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews;
 using DoAnChuyenNganh.ModelViews.OutgoingDocumentModelViews;
 using DoAnChuyenNganh.ModelViews.AlumniActivitiesModelViews;
 using DoAnChuyenNganh.ModelViews.AlumniCompanyModelViews;

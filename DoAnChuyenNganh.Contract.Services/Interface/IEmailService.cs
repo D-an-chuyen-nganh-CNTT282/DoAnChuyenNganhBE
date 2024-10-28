@@ -1,6 +1,4 @@
-﻿
-
-namespace DoAnChuyenNganh.Contract.Services.Interface
+﻿namespace DoAnChuyenNganh.Contract.Services.Interface
 {
     public interface IEmailService
     {

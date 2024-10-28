@@ -1,5 +1,4 @@
-﻿
-namespace DoAnChuyenNganh.ModelViews.ResponseDTO
+﻿namespace DoAnChuyenNganh.ModelViews.ResponseDTO
 {
     public class BusinessResponseDTO
     {

@@ -17,7 +17,7 @@ namespace DoAnChuyenNganh.Services.EmailSettings
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
             var email = new MimeMessage();
-            email.From.Add(new MailboxAddress("HỆ THỐNG QUẢN LÝ HỌC VỤ KHOA CÔNG NGHỆ THÔNG TIN - HUIT", _emailSettings.SenderEmail));
+            email.From.Add(new MailboxAddress("[No Reply] HỆ THỐNG QUẢN LÝ HỌC VỤ KHOA CÔNG NGHỆ THÔNG TIN - HUIT", _emailSettings.SenderEmail));
             email.To.Add(new MailboxAddress("Giảng viên", toEmail));
             email.Subject = subject;
 

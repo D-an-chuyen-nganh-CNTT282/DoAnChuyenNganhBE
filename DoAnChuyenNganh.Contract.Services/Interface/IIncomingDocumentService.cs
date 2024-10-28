@@ -1,5 +1,4 @@
-﻿using DoAnChuyenNganh.Contract.Repositories.Entity;
-using DoAnChuyenNganh.Core.Base;
+﻿using DoAnChuyenNganh.Core.Base;
 using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
 using DoAnChuyenNganh.ModelViews.ResponseDTO;
 

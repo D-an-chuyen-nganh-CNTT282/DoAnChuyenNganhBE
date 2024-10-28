@@ -1,5 +1,4 @@
-﻿
-namespace DoAnChuyenNganh.ModelViews.ExtracurricularActivitiesModelViews
+﻿namespace DoAnChuyenNganh.ModelViews.ExtracurricularActivitiesModelViews
 {
     public class ExtracurricularActivitiesModelView
     {

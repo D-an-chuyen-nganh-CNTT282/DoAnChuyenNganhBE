@@ -1,5 +1,4 @@
-﻿
-namespace DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews
+﻿namespace DoAnChuyenNganh.ModelViews.BusinessActivitiesModelViews
 {
     public class BusinessActivitiesModelView
     {

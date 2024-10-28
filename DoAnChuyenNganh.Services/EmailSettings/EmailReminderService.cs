@@ -67,9 +67,9 @@ namespace DoAnChuyenNganh.Services.EmailSettings
                         </td>
                         <td style='width:80%; vertical-align:top; padding-left:10px;'>
                             <p><strong>Thông tin liên hệ:</strong></p>
-                            <p>Đại diện: Quản trị viên</p>
-                            <p>Email: admin@gmail.com</p>
-                            <p>Điện thoại: 0928838171</p>
+                            <p><span style='color:blue;'>Đại diện:</span> Quản trị viên</p>
+                            <p><span style='color:blue;'>Email:</span> admin@gmail.com</p>
+                            <p><span style='color:blue;'>Điện thoại:</span> 0928838171</p>
                         </td>
                     </tr>
                 </table>";
@@ -127,9 +127,9 @@ namespace DoAnChuyenNganh.Services.EmailSettings
                         </td>
                         <td style='width:80%; vertical-align:top; padding-left:10px;'>
                             <p><strong>Thông tin liên hệ:</strong></p>
-                            <p>Đại diện: Quản trị viên</p>
-                            <p>Email: admin@gmail.com</p>
-                            <p>Điện thoại: 0928838171</p>
+                            <p><span style='color:blue;'>Đại diện:</span> Quản trị viên</p>
+                            <p><span style='color:blue;'>Email:</span> admin@gmail.com</p>
+                            <p><span style='color:blue;'>Điện thoại:</span> 0928838171</p>
                         </td>
                     </tr>
                 </table>";
@@ -157,7 +157,7 @@ namespace DoAnChuyenNganh.Services.EmailSettings
 
             foreach (var doc in incomingDocs)
             {
-                doc.DeletedTime = CoreHelper.SystemTimeNow; 
+                doc.LastUpdatedTime = CoreHelper.SystemTimeNow; 
                 doc.IncomingDocumentProcessingStatuss = IncomingDocument.IncomingDocumentProcessingStatus.Overdue; 
                 unitOfWork.GetRepository<IncomingDocument>().Update(doc); 
                 _logger.LogInformation($"Cập nhật DeletedTime và trạng thái cho Incoming document: {doc.IncomingDocumentTitle}");
@@ -171,7 +171,7 @@ namespace DoAnChuyenNganh.Services.EmailSettings
 
             foreach (var doc in outgoingDocs)
             {
-                doc.DeletedTime = CoreHelper.SystemTimeNow; 
+                doc.LastUpdatedTime = CoreHelper.SystemTimeNow; 
                 doc.OutgoingDocumentProcessingStatuss = OutgoingDocument.OutgoingDocumentProcessingStatus.Overdue; 
                 unitOfWork.GetRepository<OutgoingDocument>().Update(doc); 
                 _logger.LogInformation($"Cập nhật DeletedTime và trạng thái cho Outgoing document: {doc.OutgoingDocumentTitle}");

@@ -20,14 +20,16 @@ namespace DoAnChuyenNganh.Services.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
+        private readonly ICloudinaryService _cloudinaryService;
         private readonly UserManager<ApplicationUser> _userManager;
-        public IncomingDocumentService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, UserManager<ApplicationUser> userManager)
+        public IncomingDocumentService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, UserManager<ApplicationUser> userManager, ICloudinaryService cloudinaryService)
         {
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _emailService = emailService;
             _userManager = userManager;
+            _cloudinaryService = cloudinaryService;
         }
         public async Task Create(IncomingDocumentModelViews incomingdocumentView)
         {
@@ -44,8 +46,15 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
             }
+            string fileUrl = null;
+            if (incomingdocumentView.FileScanUrl != null)
+            {
+                // Giả sử bạn đã có ICloudinaryService
+                fileUrl = await _cloudinaryService.UploadFileAsync(incomingdocumentView.FileScanUrl);
+            }
             IncomingDocument newincomingdocument = _mapper.Map<IncomingDocument>(incomingdocumentView);
 
+            newincomingdocument.FileScanUrl = fileUrl;
             newincomingdocument.UserId = Guid.Parse(UserId);
             newincomingdocument.CreatedTime = CoreHelper.SystemTimeNow;
             newincomingdocument.CreatedBy = UserId;
@@ -63,9 +72,9 @@ namespace DoAnChuyenNganh.Services.Service
             string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
             string body = $@"
                 <p>Kính gửi giảng viên {user.Name},</p>
-                <p>Bạn vừa nhận được một công văn mới từ {department.DepartmentName} với nội dung về {incomingdocumentView.IncomingDocumentContent}. Vui lòng xem chi tiết công văn theo link đính kèm bên dưới.</p>
-                <p>Link đính kèm: {incomingdocumentView.FileScanUrl}.
-                <p>Vui lòng phản hồi công văn này với {department.DepartmentName} trước ngày <strong>{incomingdocumentView.DueDate:dd/MM/yyyy}</strong> trong giờ làm việc.</p>
+                <p>Bạn vừa nhận được một công văn mới từ {department.DepartmentName} với nội dung về '{incomingdocumentView.IncomingDocumentContent}'. Vui lòng xem chi tiết công văn theo link đính kèm bên dưới.</p>
+                <p>Link đính kèm: {fileUrl}.
+                <p>Vui lòng phản hồi công văn này với {department.DepartmentName} trước ngày <strong style='color:limegreen;'>{incomingdocumentView.DueDate:dd/MM/yyyy}</strong> trong giờ làm việc.</p>
                 <p>Trân trọng,</p>
                 <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
                 <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>
@@ -79,9 +88,9 @@ namespace DoAnChuyenNganh.Services.Service
                         </td>
                         <td style='width:80%; vertical-align:top; padding-left:10px;'>
                             <p><strong>Thông tin liên hệ:</strong></p>
-                            <p>Đại diện: {user.Name}</p>
-                            <p>Email: {user.Email}</p>
-                            <p>Điện thoại: {user.PhoneNumber}</p>
+                            <p><span style='color:blue;'>Đại diện:</span> Quản trị viên</p>
+                            <p><span style='color:blue;'>Email:</span> admin@gmail.com</p>
+                            <p><span style='color:blue;'>Điện thoại:</span> 0928838171</p>
                         </td>
                     </tr>
                 </table>";
@@ -159,6 +168,15 @@ namespace DoAnChuyenNganh.Services.Service
 
         public async Task Update(string id, IncomingDocumentModelViews incomingdocumentView)
         {
+            Department? department = await _unitOfWork.GetRepository<Department>()
+               .Entities
+               .FirstOrDefaultAsync(d => d.Id == incomingdocumentView.DepartmentId);
+
+            if (department == null)
+            {
+                throw new KeyNotFoundException($"Phòng ban với mã {incomingdocumentView.DepartmentId} không tìm thấy.");
+            }
+
             string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (string.IsNullOrWhiteSpace(UserId))
             {
@@ -168,14 +186,64 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã công văn đến!");
             }
+
             IncomingDocument? incomingDocument = await _unitOfWork.GetRepository<IncomingDocument>().GetByIdAsync(id)
                 ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy công văn đến nào với mã {id}!");
+            string oldFileUrl = incomingDocument.FileScanUrl;
             _mapper.Map(incomingdocumentView, incomingDocument);
+            if (incomingdocumentView.FileScanUrl != null)
+            {
+                // Ghi đè file cũ bằng cách sử dụng publicId
+                var publicId = !string.IsNullOrEmpty(oldFileUrl)
+                    ? Path.GetFileNameWithoutExtension(new Uri(oldFileUrl).AbsolutePath)
+                    : null;
+
+                incomingDocument.FileScanUrl = await _cloudinaryService.UploadFileAsync(incomingdocumentView.FileScanUrl);
+            }
             incomingDocument.LastUpdatedTime = CoreHelper.SystemTimeNow;
             incomingDocument.LastUpdatedBy = UserId;
             incomingDocument.UserId = Guid.Parse(UserId);
+            incomingDocument.ReceivedDate = CoreHelper.SystemTimeNow.DateTime;
+            incomingDocument.DueDate = CoreHelper.SystemTimeNow.DateTime.AddDays(7);
             await _unitOfWork.GetRepository<IncomingDocument>().UpdateAsync(incomingDocument);
             await _unitOfWork.SaveAsync();
+
+            ApplicationUser? user = await _userManager.FindByIdAsync(UserId);
+            if (user is null)
+            {
+                throw new KeyNotFoundException($"Người dùng với mã {UserId} không tìm thấy.");
+            }
+            if (incomingDocument.IncomingDocumentProcessingStatuss == IncomingDocument.IncomingDocumentProcessingStatus.Received)
+            {
+                string toEmail = user.Email;
+                string subject = $"{incomingdocumentView.IncomingDocumentTitle}";
+                string logoUrl = "https://drive.google.com/uc?export=view&id=1i49oPfikilcn0r01zkJGcSJuBg-gJHbY";
+                string body = $@"
+                <p>Kính gửi giảng viên {user.Name},</p>
+                <p>Công văn được gửi đến từ {department.DepartmentName} với nội dung về '{incomingdocumentView.IncomingDocumentContent}' có sự thay đổi. Vui lòng xem chi tiết công văn đã chỉnh sửa theo link đính kèm bên dưới.</p>
+                <p>Link đính kèm: {incomingDocument.FileScanUrl}.
+                <p>Vui lòng phản hồi công văn này với {department.DepartmentName} trước ngày <strong style='color:limegreen;'>{incomingdocumentView.DueDate:dd/MM/yyyy}</strong> trong giờ làm việc.</p>
+                <p>Trân trọng,</p>
+                <p>Văn phòng Khoa Công nghệ thông tin - HUIT.</p>
+                <p><i>Email này được gửi tự động thông qua hệ thống quản lý học vụ của khoa. Mọi thông tin phản hồi vui lòng gửi qua email người đại diện bên dưới.</i></p>
+                <br>
+                -------------------------
+                <br>
+                <table style='width:100%; margin-top:20px;'>
+                    <tr>
+                        <td style='width:20%; vertical-align:top;'>
+                            <img src='{logoUrl}' alt='System Logo' width='150' height='150' style='display:block;'/>
+                        </td>
+                        <td style='width:80%; vertical-align:top; padding-left:10px;'>
+                            <p><strong>Thông tin liên hệ:</strong></p>
+                            <p><span style='color:blue;'>Đại diện:</span> Quản trị viên</p>
+                            <p><span style='color:blue;'>Email:</span> admin@gmail.com</p>
+                            <p><span style='color:blue;'>Điện thoại:</span> 0928838171</p>
+                        </td>
+                    </tr>
+                </table>";
+                await _emailService.SendEmailAsync(toEmail, subject, body);
+            }
         }
     }
 }

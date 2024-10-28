@@ -1,5 +1,4 @@
-﻿
-namespace DoAnChuyenNganh.ModelViews.RoleViewModel
+﻿namespace DoAnChuyenNganh.ModelViews.RoleViewModel
 {
     public class RoleViewModel
     {

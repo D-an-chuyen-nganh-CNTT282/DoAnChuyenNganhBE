@@ -44,57 +44,59 @@ namespace DoAnChuyenNganh.Services.Mapping
             CreateMap<UserUpdateModelView, ApplicationUser>().ReverseMap();
 
             CreateMap<Lecturer, LecturerModelView>().ReverseMap();
-            CreateMap<LecturerResponseDTO, Lecturer>().ReverseMap();
+            CreateMap<Lecturer, LecturerResponseDTO>();
 
             CreateMap<LecturerPlan, LecturerPlanModelView>().ReverseMap();
-            CreateMap<LecturerPlanResponseDTO, LecturerPlan>().ReverseMap();
+            CreateMap<LecturerPlan, LecturerPlanResponseDTO>();
 
 
             CreateMap<LecturerActivities, LecturerActivitiesModelView>().ReverseMap();
-            CreateMap<LecturerActivitiesResponseDTO, LecturerActivities>().ReverseMap();
+            CreateMap<LecturerActivities, LecturerActivitiesResponseDTO>();
 
             CreateMap<Activities, ActivitiesModelView>().ReverseMap();
-            CreateMap<ActivitiesResponseDTO, Activities>().ReverseMap();
+            CreateMap<Activities, ActivitiesResponseDTO>();
 
             CreateMap<TeachingSchedule, TeachingScheduleModelView>().ReverseMap();
-            CreateMap<TeachingScheduleResponseDTO, TeachingSchedule>().ReverseMap();
+            CreateMap<TeachingSchedule, TeachingScheduleResponseDTO>();
 
             CreateMap<Business, BusinessModelView>().ReverseMap();
-            CreateMap<BusinessResponseDTO, Business>().ReverseMap();
+            CreateMap<Business, BusinessResponseDTO>();
 
             CreateMap<BusinessCollaboration, BusinessCollaborationModelView>().ReverseMap();
-            CreateMap<BusinessCollaborationResponseDTO, BusinessCollaboration>().ReverseMap();
+            CreateMap<BusinessCollaboration, BusinessCollaborationResponseDTO>();
 
             CreateMap<BusinessActivities, BusinessActivitiesModelView>().ReverseMap();
-            CreateMap<BusinessActivitiesResponseDTO, BusinessActivities>().ReverseMap();
+            CreateMap<BusinessActivities, BusinessActivitiesResponseDTO>();
 
             CreateMap<InternshipManagement, InternshipManagementModelView>().ReverseMap();
-            CreateMap<InternshipManagementResponseDTO, InternshipManagement>().ReverseMap();
+            CreateMap<InternshipManagement, InternshipManagementResponseDTO>();
 
             CreateMap<Student, StudentModelView>().ReverseMap();
-            CreateMap<StudentResponseDTO, Student>().ReverseMap();
+            CreateMap<Student, StudentResponseDTO>();
 
             CreateMap<ExtracurricularActivities, ExtracurricularActivitiesModelView>().ReverseMap();
-            CreateMap<ExtracurricularActivitiesReponseDTO, ExtracurricularActivities>().ReverseMap();
+            CreateMap<ExtracurricularActivities, ExtracurricularActivitiesReponseDTO>();
 
             CreateMap<StudentExpectations, StudentExpectationsModelView>().ReverseMap();
-            CreateMap<StudentExpectations,StudentExpectationsResponseDTO>().ReverseMap();
+            CreateMap<StudentExpectations, StudentExpectationsResponseDTO>();
 
             CreateMap<OutgoingDocument, OutgoingDocumentModelView>().ReverseMap();
-            CreateMap<OutgoingDocumentResponseDTO, OutgoingDocument>().ReverseMap();
+            CreateMap<OutgoingDocument, OutgoingDocumentResponseDTO>();
 
-            CreateMap<Company, CompanyResponseDTO>().ReverseMap();
+            CreateMap<Company, CompanyResponseDTO>();
             CreateMap<CompanyModelViews, Company>().ReverseMap();
 
-            CreateMap<Alumni, AlumniResponseDTO>().ReverseMap();
+            CreateMap<Alumni, AlumniResponseDTO>();
             CreateMap<AlumniModelView, Alumni>().ReverseMap();
-            CreateMap<IncomingDocument, IncomingDocumentResponseDTO>().ReverseMap();
+            CreateMap<IncomingDocument, IncomingDocumentResponseDTO>();
             CreateMap<IncomingDocumentModelViews, IncomingDocument>().ReverseMap();
-            CreateMap<AlumniCompany, AlumniCompanyResponseDTO>().ReverseMap();
+            CreateMap<AlumniCompany, AlumniCompanyResponseDTO>();
             CreateMap<AlumniCompanyModelView, AlumniCompany>().ReverseMap();
 
-            CreateMap<AlumniActivities, AlumniActivitiesResponseDTO>().ReverseMap();
+            CreateMap<AlumniActivities, AlumniActivitiesResponseDTO>();
             CreateMap<AlumniActivitiesModelView, AlumniActivities>().ReverseMap();
+
+            CreateMap<Department, DepartmentResponseDTO>();
 
         }
     }

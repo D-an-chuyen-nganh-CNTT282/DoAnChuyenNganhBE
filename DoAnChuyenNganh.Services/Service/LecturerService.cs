@@ -103,10 +103,10 @@ namespace DoAnChuyenNganh.Services.Service
                     LecturerAddress = lecturer.LecturerAddress,
                     Expertise = lecturer.Expertise,
                     PersonalWebsiteLink = lecturer.PersonalWebsiteLink,
-                    CreatedBy = lecturer.CreatedBy,
-                    LastUpdatedBy = lecturer.LastUpdatedBy,
-                    CreatedTime = lecturer.CreatedTime,
-                    LastUpdatedTime = lecturer.LastUpdatedTime,
+                    //CreatedBy = lecturer.CreatedBy,
+                    //LastUpdatedBy = lecturer.LastUpdatedBy,
+                    //CreatedTime = lecturer.CreatedTime,
+                    //LastUpdatedTime = lecturer.LastUpdatedTime,
                 })
                 .ToListAsync();
 

@@ -336,10 +336,10 @@ namespace DoAnChuyenNganh.Services.Service
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
                     RoleName = u.UserRoles.FirstOrDefault().Role.Name,
-                    CreatedBy = u.CreatedBy,
-                    LastUpdatedBy = u.LastUpdatedBy,
-                    CreatedTime = u.CreatedTime,
-                    LastUpdatedTime = u.LastUpdatedTime,
+                    //CreatedBy = u.CreatedBy,
+                    //LastUpdatedBy = u.LastUpdatedBy,
+                    //CreatedTime = u.CreatedTime,
+                    //LastUpdatedTime = u.LastUpdatedTime,
                 })
                 .ToListAsync();
 

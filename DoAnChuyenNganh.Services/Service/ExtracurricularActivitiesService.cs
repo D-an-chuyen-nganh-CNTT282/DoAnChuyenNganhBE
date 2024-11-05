@@ -100,10 +100,10 @@ namespace DoAnChuyenNganh.Services.Service
                     Id = activities.Id,
                     StudentId = activities.StudentId,
                     ActivitiesId = activities.ActivitiesId,
-                    CreatedBy = activities.CreatedBy,
-                    LastUpdatedBy = activities.LastUpdatedBy,
-                    CreatedTime = activities.CreatedTime,
-                    LastUpdatedTime = activities.LastUpdatedTime,
+                    //CreatedBy = activities.CreatedBy,
+                    //LastUpdatedBy = activities.LastUpdatedBy,
+                    //CreatedTime = activities.CreatedTime,
+                    //LastUpdatedTime = activities.LastUpdatedTime,
                 })
                 .ToListAsync();
 

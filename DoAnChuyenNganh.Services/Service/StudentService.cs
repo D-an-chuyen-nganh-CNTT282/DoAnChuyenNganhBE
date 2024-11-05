@@ -121,10 +121,10 @@ namespace DoAnChuyenNganh.Services.Service
                     Class = student.Class,
                     GPA = student.GPA,
                     LecturerId = student.LecturerId,
-                    CreatedBy = student.CreatedBy,
-                    LastUpdatedBy = student.LastUpdatedBy,
-                    CreatedTime = student.CreatedTime,
-                    LastUpdatedTime = student.LastUpdatedTime,
+                    //CreatedBy = student.CreatedBy,
+                    //LastUpdatedBy = student.LastUpdatedBy,
+                    //CreatedTime = student.CreatedTime,
+                    //LastUpdatedTime = student.LastUpdatedTime,
                 })
                 .ToListAsync();
 

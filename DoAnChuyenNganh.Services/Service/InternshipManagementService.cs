@@ -130,10 +130,10 @@ namespace DoAnChuyenNganh.Services.Service
                     EndDate = internship.EndDate,
                     Remark = internship.Remark,
                     Rating = internship.Rating,
-                    CreatedBy = internship.CreatedBy,
-                    CreatedTime = internship.CreatedTime,
-                    LastUpdatedBy = internship.LastUpdatedBy,
-                    LastUpdatedTime = internship.LastUpdatedTime,
+                    //CreatedBy = internship.CreatedBy,
+                    //CreatedTime = internship.CreatedTime,
+                    //LastUpdatedBy = internship.LastUpdatedBy,
+                    //LastUpdatedTime = internship.LastUpdatedTime,
                 })
                 .ToListAsync();
 

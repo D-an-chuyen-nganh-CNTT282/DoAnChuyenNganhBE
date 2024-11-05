@@ -102,10 +102,10 @@ namespace DoAnChuyenNganh.Services.Service
                     Subject = teachingSchedule.Subject,
                     Location = teachingSchedule.Location,
                     ClassPeriod = teachingSchedule.ClassPeriod,
-                    CreatedBy = teachingSchedule.CreatedBy,
-                    LastUpdatedBy = teachingSchedule.LastUpdatedBy,
-                    CreatedTime = teachingSchedule.CreatedTime,
-                    LastUpdatedTime = teachingSchedule.LastUpdatedTime,
+                    //CreatedBy = teachingSchedule.CreatedBy,
+                    //LastUpdatedBy = teachingSchedule.LastUpdatedBy,
+                    //CreatedTime = teachingSchedule.CreatedTime,
+                    //LastUpdatedTime = teachingSchedule.LastUpdatedTime,
                 })
                 .ToListAsync();
 

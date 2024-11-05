@@ -128,10 +128,10 @@ namespace DoAnChuyenNganh.Services.Service
                     StartDate = lecturerPlan.StartDate,
                     EndDate = lecturerPlan.EndDate,
                     Note = lecturerPlan.Note,
-                    CreatedBy = lecturerPlan.CreatedBy,
-                    LastUpdatedBy = lecturerPlan.LastUpdatedBy,
-                    CreatedTime = lecturerPlan.CreatedTime,
-                    LastUpdatedTime = lecturerPlan.LastUpdatedTime,
+                    //CreatedBy = lecturerPlan.CreatedBy,
+                    //LastUpdatedBy = lecturerPlan.LastUpdatedBy,
+                    //CreatedTime = lecturerPlan.CreatedTime,
+                    //LastUpdatedTime = lecturerPlan.LastUpdatedTime,
                 })
                 .ToListAsync();
 

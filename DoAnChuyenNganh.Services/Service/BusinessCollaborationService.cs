@@ -98,10 +98,10 @@ namespace DoAnChuyenNganh.Services.Service
                     ProjectName = businessCollaboration.ProjectName,
                     ProjectStatuss = businessCollaboration.ProjectStatuss.ToString(),
                     Result = businessCollaboration.Result,
-                    CreatedBy = businessCollaboration.CreatedBy,
-                    LastUpdatedBy = businessCollaboration.LastUpdatedBy,
-                    CreatedTime = businessCollaboration.CreatedTime,
-                    LastUpdatedTime = businessCollaboration.LastUpdatedTime,
+                    //CreatedBy = businessCollaboration.CreatedBy,
+                    //LastUpdatedBy = businessCollaboration.LastUpdatedBy,
+                    //CreatedTime = businessCollaboration.CreatedTime,
+                    //LastUpdatedTime = businessCollaboration.LastUpdatedTime,
                 })
                 .ToListAsync();
 

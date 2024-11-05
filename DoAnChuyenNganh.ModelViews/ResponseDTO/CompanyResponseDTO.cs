@@ -8,9 +8,9 @@
         public string CompanyAddress { get; set; }
         public string CompanyPhone { get; set; }
         public string CompanyEmail { get; set; }
-        public string? CreatedBy { get; set; }
-        public string? LastUpdatedBy { get; set; }
-        public DateTimeOffset CreatedTime { get; set; }
-        public DateTimeOffset? LastUpdatedTime { get; set; }
+        //public string? CreatedBy { get; set; }
+        //public string? LastUpdatedBy { get; set; }
+        //public DateTimeOffset CreatedTime { get; set; }
+        //public DateTimeOffset? LastUpdatedTime { get; set; }
     }
 }

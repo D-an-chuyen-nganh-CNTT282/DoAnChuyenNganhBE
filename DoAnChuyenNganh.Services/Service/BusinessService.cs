@@ -101,10 +101,10 @@ namespace DoAnChuyenNganh.Services.Service
                     BusinessAddress = bussiness.BusinessAddress,
                     BusinessPhone = bussiness.BusinessPhone,
                     BusinessEmail = bussiness.BusinessEmail,
-                    CreatedBy = bussiness.CreatedBy,
-                    LastUpdatedBy = bussiness.LastUpdatedBy,
-                    CreatedTime = bussiness.CreatedTime,
-                    LastUpdatedTime = bussiness.LastUpdatedTime,
+                    //CreatedBy = bussiness.CreatedBy,
+                    //LastUpdatedBy = bussiness.LastUpdatedBy,
+                    //CreatedTime = bussiness.CreatedTime,
+                    //LastUpdatedTime = bussiness.LastUpdatedTime,
                 })
                 .ToListAsync();
 

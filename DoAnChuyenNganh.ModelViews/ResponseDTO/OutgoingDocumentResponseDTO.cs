@@ -11,10 +11,10 @@
         public Guid UserId { get; set; }
         public string OutgoingDocumentProcessingStatuss { get; set; }
         public DateTime DueDate { get; } = DateTime.Now.AddDays(7);
-        public string? CreatedBy { get; set; }
-        public string? LastUpdatedBy { get; set; }
-        public DateTimeOffset CreatedTime { get; set; }
-        public DateTimeOffset? LastUpdatedTime { get; set; }
+        //public string? CreatedBy { get; set; }
+        //public string? LastUpdatedBy { get; set; }
+        //public DateTimeOffset CreatedTime { get; set; }
+        //public DateTimeOffset? LastUpdatedTime { get; set; }
         public string FileScanUrl { get; set; }
     }
 }

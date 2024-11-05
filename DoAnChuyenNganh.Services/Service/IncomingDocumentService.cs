@@ -155,10 +155,10 @@ namespace DoAnChuyenNganh.Services.Service
                     FileScanUrl = doc.FileScanUrl,
                     ReceivedDate = doc.ReceivedDate,
                     DueDate = doc.DueDate,
-                    LastUpdatedBy = doc.LastUpdatedBy,
-                    LastUpdatedTime = doc.LastUpdatedTime,
-                    CreatedBy = doc.CreatedBy,
-                    CreatedTime = doc.CreatedTime,
+                    //LastUpdatedBy = doc.LastUpdatedBy,
+                    //LastUpdatedTime = doc.LastUpdatedTime,
+                    //CreatedBy = doc.CreatedBy,
+                    //CreatedTime = doc.CreatedTime,
                 })
                 .ToListAsync();
 

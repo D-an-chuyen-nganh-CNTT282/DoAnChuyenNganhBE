@@ -120,10 +120,10 @@ namespace DoAnChuyenNganh.Services.Service
                     Id = activities.Id,
                     LecturerId = activities.LecturerId,
                     ActivitiesId = activities.ActivitiesId,
-                    CreatedBy = activities.CreatedBy,
-                    LastUpdatedBy = activities.LastUpdatedBy,
-                    CreatedTime = activities.CreatedTime,
-                    LastUpdatedTime = activities.LastUpdatedTime,
+                    //CreatedBy = activities.CreatedBy,
+                    //LastUpdatedBy = activities.LastUpdatedBy,
+                    //CreatedTime = activities.CreatedTime,
+                    //LastUpdatedTime = activities.LastUpdatedTime,
                 })
                 .ToListAsync();
 

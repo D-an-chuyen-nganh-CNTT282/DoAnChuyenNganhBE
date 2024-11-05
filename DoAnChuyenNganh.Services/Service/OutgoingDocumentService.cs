@@ -132,8 +132,8 @@ namespace DoAnChuyenNganh.Services.Service
                     RecipientEmail = doc.RecipientEmail,
                     UserId = doc.UserId,
                     OutgoingDocumentProcessingStatuss = doc.OutgoingDocumentProcessingStatuss.ToString(),
-                    CreatedBy = doc.CreatedBy,
-                    CreatedTime = doc.CreatedTime,
+                    //CreatedBy = doc.CreatedBy,
+                    //CreatedTime = doc.CreatedTime,
                 })
                 .ToListAsync();
 

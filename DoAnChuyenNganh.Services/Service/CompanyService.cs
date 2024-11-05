@@ -82,10 +82,10 @@ namespace DoAnChuyenNganh.Services.Service
                     CompanyEmail = company.CompanyEmail,
                     CompanyPhone = company.CompanyPhone,
                     UserId = company.UserId,
-                    CreatedBy = company.CreatedBy,
-                    LastUpdatedBy = company.LastUpdatedBy,
-                    CreatedTime = company.CreatedTime,
-                    LastUpdatedTime = company.LastUpdatedTime,
+                    //CreatedBy = company.CreatedBy,
+                    //LastUpdatedBy = company.LastUpdatedBy,
+                    //CreatedTime = company.CreatedTime,
+                    //LastUpdatedTime = company.LastUpdatedTime,
                 })
                 .ToListAsync();
 

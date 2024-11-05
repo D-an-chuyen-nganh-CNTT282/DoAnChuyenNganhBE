@@ -68,10 +68,10 @@ namespace DoAnChuyenNganh.Services.Service
                     LecturerId = alumni.LecturerId,
                     UserId = alumni.UserId,
                     PreviousClass = alumni.PreviousClass,
-                    CreatedBy = alumni.CreatedBy,
-                    LastUpdatedBy = alumni.LastUpdatedBy,
-                    CreatedTime = alumni.CreatedTime,
-                    LastUpdatedTime = alumni.LastUpdatedTime,
+                    //CreatedBy = alumni.CreatedBy,
+                    //LastUpdatedBy = alumni.LastUpdatedBy,
+                    //CreatedTime = alumni.CreatedTime,
+                    //LastUpdatedTime = alumni.LastUpdatedTime,
                 })
                 .ToListAsync();
 

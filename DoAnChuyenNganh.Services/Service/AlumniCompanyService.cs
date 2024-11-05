@@ -60,10 +60,10 @@ namespace DoAnChuyenNganh.Services.Service
                     CompanyId = alumnicompany.CompanyId,
                     StartDate = alumnicompany.StartDate,
                     EndDate = alumnicompany.EndDate,
-                    CreatedBy = alumnicompany.CreatedBy,
-                    LastUpdatedBy = alumnicompany.LastUpdatedBy,
-                    CreatedTime = alumnicompany.CreatedTime,
-                    LastUpdatedTime = alumnicompany.LastUpdatedTime,
+                    //CreatedBy = alumnicompany.CreatedBy,
+                    //LastUpdatedBy = alumnicompany.LastUpdatedBy,
+                    //CreatedTime = alumnicompany.CreatedTime,
+                    //LastUpdatedTime = alumnicompany.LastUpdatedTime,
                 })
                 .ToListAsync();
 

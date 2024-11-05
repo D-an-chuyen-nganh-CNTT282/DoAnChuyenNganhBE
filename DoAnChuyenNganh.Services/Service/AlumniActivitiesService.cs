@@ -59,10 +59,10 @@ namespace DoAnChuyenNganh.Services.Service
                     Id = alumniActiviti.Id,
                     ActivitiesId = alumniActiviti.ActivitiesId,
                     AlumniId = alumniActiviti.AlumniId,
-                    CreatedBy = alumniActiviti.CreatedBy,
-                    LastUpdatedBy = alumniActiviti.LastUpdatedBy,
-                    CreatedTime = alumniActiviti.CreatedTime,
-                    LastUpdatedTime = alumniActiviti.LastUpdatedTime,
+                    //CreatedBy = alumniActiviti.CreatedBy,
+                    //LastUpdatedBy = alumniActiviti.LastUpdatedBy,
+                    //CreatedTime = alumniActiviti.CreatedTime,
+                    //LastUpdatedTime = alumniActiviti.LastUpdatedTime,
                 })
                 .ToListAsync();
 

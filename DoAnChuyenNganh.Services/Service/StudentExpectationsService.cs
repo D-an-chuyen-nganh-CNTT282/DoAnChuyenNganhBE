@@ -124,10 +124,10 @@ namespace DoAnChuyenNganh.Services.Service
                     RequestDate = expectation.RequestDate,
                     CompletionDate = expectation.CompletionDate,
                     FileScanUrl = expectation.FileScanUrl,
-                    CreatedBy = expectation.CreatedBy,
-                    LastUpdatedBy = expectation.LastUpdatedBy,
-                    CreatedTime = expectation.CreatedTime,
-                    LastUpdatedTime = expectation.LastUpdatedTime
+                    //CreatedBy = expectation.CreatedBy,
+                    //LastUpdatedBy = expectation.LastUpdatedBy,
+                    //CreatedTime = expectation.CreatedTime,
+                    //LastUpdatedTime = expectation.LastUpdatedTime
                 })
                 .ToListAsync();
 

@@ -17,7 +17,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
             _studentService = studentService;
         }
 
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo Vụ Khoa")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo Vụ Khoa, Giảng viên")]
         [HttpGet]
         public async Task<IActionResult> GetStudents(string? id, string? name, string? studentClass, string? studentMajor, int index = 1, int pageSize = 10)
         {

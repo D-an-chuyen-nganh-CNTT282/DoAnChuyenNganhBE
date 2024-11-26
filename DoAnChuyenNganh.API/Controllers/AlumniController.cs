@@ -33,7 +33,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
             return Ok(BaseResponse<string>.OkResponse("Đã sửa cựu sinh viên thành công"));
         }
 
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Giảng viên, Giáo vụ khoa")]
         [HttpGet]
         public async Task<IActionResult> Get( string? id,  string? alumniName, string? alumniMajor,  string? alumniCourse, int pageSize = 10, int pageIndex = 1)
         {

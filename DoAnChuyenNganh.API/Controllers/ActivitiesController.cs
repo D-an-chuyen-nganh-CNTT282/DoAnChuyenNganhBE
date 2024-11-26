@@ -16,7 +16,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
         {
             _activitiesService = activitiesService;
         }
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Giảng viên, Giáo vụ khoa")]
         [HttpGet]
         public async Task<IActionResult> GetActivities(string? id, string? name, int index = 1, int pageSize = 10)
         {

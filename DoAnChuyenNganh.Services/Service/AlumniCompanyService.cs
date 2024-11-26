@@ -58,6 +58,7 @@ namespace DoAnChuyenNganh.Services.Service
                     Id = alumnicompany.Id,
                     AlumniId = alumnicompany.AlumniId,
                     CompanyId = alumnicompany.CompanyId,
+                    Duty = alumnicompany.Duty,
                     StartDate = alumnicompany.StartDate,
                     EndDate = alumnicompany.EndDate,
                     //CreatedBy = alumnicompany.CreatedBy,

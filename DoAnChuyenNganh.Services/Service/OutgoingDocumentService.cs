@@ -174,6 +174,7 @@ namespace DoAnChuyenNganh.Services.Service
                     RecipientEmail = doc.RecipientEmail,
                     UserId = doc.UserId,
                     OutgoingDocumentProcessingStatuss = doc.OutgoingDocumentProcessingStatuss.ToString(),
+                    FileScanUrl = doc.FileScanUrl,
                     //CreatedBy = doc.CreatedBy,
                     //CreatedTime = doc.CreatedTime,
                 })

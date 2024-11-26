@@ -131,6 +131,10 @@ namespace DoAnChuyenNganh.Services.Service
             if (result.Succeeded)
             {
                 ApplicationRole? role = await roleManager.FindByIdAsync(userModel.RoleId);
+                if (role == null)
+                {
+                    throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Vai trò không hợp lệ");
+                }
                 await userManager.AddToRoleAsync(newUser, role.Name);
                 string toEmail = userModel.Email;
                 string subject = "Cấp tài khoản sử dụng hệ thống";

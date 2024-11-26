@@ -15,7 +15,7 @@ namespace DoAnChuyenNganh.ModelViews.OutgoingDocumentModelViews
         public DateTime SendDate { get; } = DateTime.Now;
         public string DepartmentId { get; set; }
         public string RecipientEmail { get; set; }
-        public Guid UserId { get; set; }
+        //public Guid UserId { get; set; }
         public required OutgoingDocumentProcessingStatus OutgoingDocumentProcessingStatuss { get; set; }
         public DateTime DueDate { get; } = DateTime.Now.AddDays(7);
         public required IFormFile FileScanUrl { get; set; }

@@ -26,11 +26,11 @@ namespace DoAnChuyenNganh.Services.Service
         }
         public async Task CreateActivities(ActivitiesModelView activitiesModelView)
         {
-            //string? UserId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //if (string.IsNullOrWhiteSpace(UserId))
-            //{
-            //    throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
-            //}
+            string? UserId = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrWhiteSpace(UserId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
+            }
             Activities activities = _mapper.Map<Activities>(activitiesModelView);
             activities.CreatedTime = CoreHelper.SystemTimeNow;
             activities.DeletedTime = null;
@@ -40,11 +40,11 @@ namespace DoAnChuyenNganh.Services.Service
         }
         public async Task DeleteActivities(string id)
         {
-            //string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //if (string.IsNullOrWhiteSpace(UserId))
-            //{
-            //    throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
-            //}
+            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrWhiteSpace(UserId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
+            }
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động!");
@@ -55,18 +55,18 @@ namespace DoAnChuyenNganh.Services.Service
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, "Hoạt động đã bị xóa!");
             }
-            //activities.DeletedBy = UserId;
+            activities.DeletedBy = UserId;
             activities.DeletedTime = CoreHelper.SystemTimeNow;
             await _unitOfWork.GetRepository<Activities>().UpdateAsync(activities);
             await _unitOfWork.SaveAsync();
         }
         public async Task UpdateActivities(string id, ActivitiesModelView activitiesModelView)
         {
-            //string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //if (string.IsNullOrWhiteSpace(UserId))
-            //{
-            //    throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
-            //}
+            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrWhiteSpace(UserId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
+            }
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã hoạt động!");
@@ -75,7 +75,7 @@ namespace DoAnChuyenNganh.Services.Service
                 ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy hoạt động nào với mã {id}!");
             _mapper.Map(activitiesModelView, activities);
             activities.LastUpdatedTime = CoreHelper.SystemTimeNow;
-            //activities.LastUpdatedBy = UserId;
+            activities.LastUpdatedBy = UserId;
             await _unitOfWork.GetRepository<Activities>().UpdateAsync(activities);
             await _unitOfWork.SaveAsync();
         }

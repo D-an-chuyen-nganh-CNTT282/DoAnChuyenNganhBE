@@ -96,7 +96,7 @@ namespace DoAnChuyenNganh.Services.Service
             InternshipManagement newInternshipManagement = new InternshipManagement
             {
                 StudentId = internshipManagementModelView.StudentId,
-                BusinessId = internshipManagementModelView.StudentId,
+                BusinessId = internshipManagementModelView.BusinessId,
                 StartDate = internshipManagementModelView.StartDate,
                 EndDate = internshipManagementModelView.EndDate,
                 Remark = internshipManagementModelView.Remark,

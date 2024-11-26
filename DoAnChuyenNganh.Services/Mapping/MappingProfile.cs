@@ -35,6 +35,9 @@ namespace DoAnChuyenNganh.Services.Mapping
             CreateMap<ApplicationUser, UserProfileResponseModelView>().ReverseMap();
 
             CreateMap<UserModelView, ApplicationUser>()
+            .ForMember(dest => dest.CreatedTime, opt => opt.MapFrom(src => DateTimeOffset.UtcNow));
+
+            CreateMap<UserModelView, ApplicationUser>()
             .ForMember(dest => dest.LastUpdatedBy, opt => opt.Ignore())
             .ForMember(dest => dest.LastUpdatedTime, opt => opt.Ignore());
 

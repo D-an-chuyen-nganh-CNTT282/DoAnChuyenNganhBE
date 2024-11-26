@@ -9,7 +9,7 @@ namespace DoAnChuyenNganh.ModelViews.InternshipMangamentModelViews
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string? Remark { get; set; }
-        [Range(1, 5, ErrorMessage = "Đánh giá từ 0 đến 10 điểm")]
+        [Range(1, 10, ErrorMessage = "Đánh giá từ 0 đến 10 điểm")]
         public int? Rating { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using DoAnChuyenNganh.Repositories.Entity;
 using Microsoft.AspNetCore.Identity;
+using DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews;
 
 namespace DoAnChuyenNganh.Services.Service
 {
@@ -100,7 +101,48 @@ namespace DoAnChuyenNganh.Services.Service
                 </table>";
             await _emailService.SendEmailAsync(toEmail, subject, body);
         }
+        public async Task UpdateOutgoingDocument(string id, OutgoingDocumentModelView outgoingDocumentModelView)
+        {
+            Department? department = await _unitOfWork.GetRepository<Department>()
+               .Entities
+               .FirstOrDefaultAsync(d => d.Id == outgoingDocumentModelView.DepartmentId);
 
+            if (department == null)
+            {
+                throw new KeyNotFoundException($"Phòng ban với mã {outgoingDocumentModelView.DepartmentId} không tìm thấy.");
+            }
+
+            string? UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrWhiteSpace(UserId))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.Unauthorized, ErrorCode.Unauthorized, "Vui lòng đăng nhập vào tài khoản!");
+            }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new BaseException.ErrorException(Core.Store.StatusCodes.BadRequest, ErrorCode.BadRequest, "Xin hãy nhập mã công văn đến!");
+            }
+
+            OutgoingDocument? outgoingDocument = await _unitOfWork.GetRepository<OutgoingDocument>().GetByIdAsync(id)
+                ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, $"Không tìm thấy công văn đến nào với mã {id}!");
+            string oldFileUrl = outgoingDocument.FileScanUrl;
+            _mapper.Map(outgoingDocumentModelView, outgoingDocument);
+            if (outgoingDocumentModelView.FileScanUrl != null)
+            {
+                // Ghi đè file cũ bằng cách sử dụng publicId
+                var publicId = !string.IsNullOrEmpty(oldFileUrl)
+                    ? Path.GetFileNameWithoutExtension(new Uri(oldFileUrl).AbsolutePath)
+                    : null;
+
+                outgoingDocument.FileScanUrl = await _cloudinaryService.UploadFileAsync(outgoingDocumentModelView.FileScanUrl);
+            }
+            outgoingDocument.LastUpdatedTime = CoreHelper.SystemTimeNow;
+            outgoingDocument.LastUpdatedBy = UserId;
+            outgoingDocument.UserId = Guid.Parse(UserId);
+            //outgoingDocument.ReceivedDate = CoreHelper.SystemTimeNow.DateTime;
+            //outgoingDocument.DueDate = CoreHelper.SystemTimeNow.DateTime.AddDays(7);
+            await _unitOfWork.GetRepository<OutgoingDocument>().UpdateAsync(outgoingDocument);
+            await _unitOfWork.SaveAsync();
+        }
         public async Task<BasePaginatedList<OutgoingDocumentResponseDTO>> GetOutgoingDocuments(string? title, string? departmentId, Guid? userId, int pageIndex, int pageSize)
         {
             IQueryable<OutgoingDocument>? query = _unitOfWork.GetRepository<OutgoingDocument>().Entities.Where(doc => doc.DeletedTime == null);

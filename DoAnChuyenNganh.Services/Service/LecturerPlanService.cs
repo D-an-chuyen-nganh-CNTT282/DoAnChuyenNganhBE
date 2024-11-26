@@ -40,11 +40,12 @@ namespace DoAnChuyenNganh.Services.Service
                 .Entities
                 .FirstOrDefaultAsync(l => l.LecturerEmail == email)
                 ?? throw new BaseException.ErrorException(Core.Store.StatusCodes.NotFound, ErrorCode.NotFound, "Không tìm thấy giảng viên tương ứng với tài khoản email này!");
-            lecturerPlanModelView.LecturerId = lecturer.Id;
+            //lecturerPlanModelView.LecturerId = lecturer.Id;
             LecturerPlan lecturerPlan = _mapper.Map<LecturerPlan>(lecturerPlanModelView);
             lecturerPlan.CreatedBy = UserId;
             lecturerPlan.CreatedTime = CoreHelper.SystemTimeNow;
             lecturerPlan.UserId = Guid.Parse(UserId);
+            lecturerPlan.LecturerId = lecturer.Id;
             await _unitOfWork.GetRepository<LecturerPlan>().InsertAsync(lecturerPlan);
             await _unitOfWork.SaveAsync();
         }

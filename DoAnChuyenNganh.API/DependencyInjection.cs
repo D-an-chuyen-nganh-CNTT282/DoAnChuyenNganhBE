@@ -127,6 +127,7 @@ namespace DoAnChuyenNganhBE.API
             services.AddScoped<IAlumniCompanyService, AlumniCompanyService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
 
         }
         public static void AddAutoMapperConfig(this IServiceCollection services)

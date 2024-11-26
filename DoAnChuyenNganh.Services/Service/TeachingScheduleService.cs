@@ -78,6 +78,7 @@ namespace DoAnChuyenNganh.Services.Service
             _mapper.Map(teachingScheduleModelView, teachingSchedule);
             teachingSchedule.LastUpdatedTime = CoreHelper.SystemTimeNow;
             teachingSchedule.LastUpdatedBy = UserId;
+            teachingSchedule.UserId = Guid.Parse(UserId);
             await _unitOfWork.GetRepository<TeachingSchedule>().UpdateAsync(teachingSchedule);
             await _unitOfWork.SaveAsync();
         }

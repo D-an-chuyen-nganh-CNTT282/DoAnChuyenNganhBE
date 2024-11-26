@@ -2,7 +2,7 @@
 {
     public class AlumniModelView
     {
-        public required Guid UserId { get; set; }
+        //public required Guid UserId { get; set; }
         public string AlumniName { get; set; }
         public DateTime DayOfBirth { get; set; }
         public string AlumniGender { get; set; }

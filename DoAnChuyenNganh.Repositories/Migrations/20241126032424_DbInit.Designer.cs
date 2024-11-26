@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoAnChuyenNganh.Repositories.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241028124148_fixTblInternship")]
-    partial class fixTblInternship
+    [Migration("20241126032424_DbInit")]
+    partial class DbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

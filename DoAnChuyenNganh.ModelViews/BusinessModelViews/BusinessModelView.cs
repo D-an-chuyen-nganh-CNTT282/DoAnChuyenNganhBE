@@ -2,7 +2,7 @@
 {
     public class BusinessModelView
     {
-        public Guid UserId { get; set; }
+        //public Guid UserId { get; set; }
         public string LecturerId { get; set; }
         public string BusinessName { get; set; }
         public string BusinessAddress { get; set; }

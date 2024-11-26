@@ -203,8 +203,8 @@ namespace DoAnChuyenNganh.Services.Service
             incomingDocument.LastUpdatedTime = CoreHelper.SystemTimeNow;
             incomingDocument.LastUpdatedBy = UserId;
             incomingDocument.UserId = Guid.Parse(UserId);
-            incomingDocument.ReceivedDate = CoreHelper.SystemTimeNow.DateTime;
-            incomingDocument.DueDate = CoreHelper.SystemTimeNow.DateTime.AddDays(7);
+            //incomingDocument.ReceivedDate = CoreHelper.SystemTimeNow.DateTime;
+            //incomingDocument.DueDate = CoreHelper.SystemTimeNow.DateTime.AddDays(7);
             await _unitOfWork.GetRepository<IncomingDocument>().UpdateAsync(incomingDocument);
             await _unitOfWork.SaveAsync();
 

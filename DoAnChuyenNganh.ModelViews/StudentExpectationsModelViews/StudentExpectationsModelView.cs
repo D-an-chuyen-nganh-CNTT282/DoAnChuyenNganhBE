@@ -15,8 +15,8 @@ namespace DoAnChuyenNganh.ModelViews.StudentExpectationsModelViews
         [Required]
         public string StudentId { get; set; }
         public required string RequestCategory { get; set; }
-        public Guid UserId { get; set; }
-        public ProcessingStatus Status { get; set; } 
+        //public Guid UserId { get; set; }
+        public required ProcessingStatus ProcessingStatuss { get; set; }
         public DateTime RequestDate { get; } = DateTime.Now;
         public DateTime? CompletionDate { get; set; }
         public required IFormFile FileScanUrl { get; set; }

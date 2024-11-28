@@ -12,12 +12,12 @@ namespace DoAnChuyenNganh.ModelViews.OutgoingDocumentModelViews
         }
         public string OutgoingDocumentTitle { get; set; }
         public string OutgoingDocumentContent { get; set; }
-        public DateTime SendDate { get; } = DateTime.Now;
+        public DateTime SendDate { get; set; }
         public string DepartmentId { get; set; }
         public string RecipientEmail { get; set; }
         //public Guid UserId { get; set; }
         public required OutgoingDocumentProcessingStatus OutgoingDocumentProcessingStatuss { get; set; }
-        public DateTime DueDate { get; } = DateTime.Now.AddDays(7);
+        public DateTime DueDate { get; set; }
         public required IFormFile FileScanUrl { get; set; }
     }
 }

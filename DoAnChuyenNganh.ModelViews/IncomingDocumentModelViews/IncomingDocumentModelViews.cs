@@ -15,7 +15,7 @@ namespace DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews
 
         public string IncomingDocumentContent { get; set; }
 
-        public DateTime? ReceivedDate { get; } = DateTime.Now;
+        public DateTime? ReceivedDate { get; set; }
 
         public string DepartmentId { get; set; }
 
@@ -23,6 +23,6 @@ namespace DoAnChuyenNganh.ModelViews.IncomingDocumentModelViews
 
         public required IncomingDocumentProcessingStatus IncomingDocumentProcessingStatuss { get; set; }
 
-        public DateTime? DueDate { get; } = DateTime.Now.AddDays(7);
+        public DateTime? DueDate { get; set; } 
     }
 }

@@ -54,8 +54,8 @@ namespace DoAnChuyenNganh.Services.Service
         {
             var currentDate = DateTime.Now;
 
-            // Tạo query cho từng loại hoạt động
-            var alumniActivities = _context.AlumniActivities
+            // Lấy dữ liệu từ các bảng và chuyển thành danh sách
+            var alumniActivities = await _context.AlumniActivities
                 .Include(a => a.Activities)
                 .Where(a => a.Activities.EventDate > currentDate)
                 .Select(a => new ActivitiesResponseDTO
@@ -66,9 +66,10 @@ namespace DoAnChuyenNganh.Services.Service
                     Location = a.Activities.Location,
                     EventTypes = "Alumni Activity",
                     Description = a.Activities.Description
-                });
+                })
+                .ToListAsync();
 
-            var businessActivities = _context.BusinessActivities
+            var businessActivities = await _context.BusinessActivities
                 .Include(b => b.Activities)
                 .Where(b => b.Activities.EventDate > currentDate)
                 .Select(b => new ActivitiesResponseDTO
@@ -79,9 +80,10 @@ namespace DoAnChuyenNganh.Services.Service
                     Location = b.Activities.Location,
                     EventTypes = "Business Activity",
                     Description = b.Activities.Description
-                });
+                })
+                .ToListAsync();
 
-            var lecturerActivities = _context.LecturerActivities
+            var lecturerActivities = await _context.LecturerActivities
                 .Include(l => l.Activities)
                 .Where(l => l.Activities.EventDate > currentDate)
                 .Select(l => new ActivitiesResponseDTO
@@ -92,9 +94,10 @@ namespace DoAnChuyenNganh.Services.Service
                     Location = l.Activities.Location,
                     EventTypes = "Lecturer Activity",
                     Description = l.Activities.Description
-                });
+                })
+                .ToListAsync();
 
-            var extracurricularActivities = _context.ExtracurricularActivities
+            var extracurricularActivities = await _context.ExtracurricularActivities
                 .Include(e => e.Activities)
                 .Where(e => e.Activities.EventDate > currentDate)
                 .Select(e => new ActivitiesResponseDTO
@@ -105,16 +108,29 @@ namespace DoAnChuyenNganh.Services.Service
                     Location = e.Activities.Location,
                     EventTypes = "Extracurricular Activity",
                     Description = e.Activities.Description
-                });
+                })
+                .ToListAsync();
 
-            // Kết hợp tất cả hoạt động thành một query
+            // Kết hợp danh sách và loại bỏ trùng lặp
             var allActivities = alumniActivities
                 .Concat(businessActivities)
                 .Concat(lecturerActivities)
                 .Concat(extracurricularActivities)
-                .OrderBy(a => a.EventDate);
+                .GroupBy(a => a.Id)
+                .Select(g => g.First()) // Giữ bản ghi đầu tiên trong mỗi nhóm
+                .OrderBy(a => a.EventDate)
+                .ToList();
 
-            return await PaginateActivities(allActivities, pageIndex, pageSize);
+            // Phân trang
+            int totalItems = allActivities.Count;
+            var paginatedActivities = allActivities
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new BasePaginatedList<ActivitiesResponseDTO>(paginatedActivities, totalItems, pageIndex, pageSize);
         }
+
+
     }
 }

@@ -47,6 +47,7 @@ namespace DoAnChuyenNganh.Services.Service
             studentExpectations.FileScanUrl = fileUrl;
             studentExpectations.UserId = Guid.Parse(userId);
             studentExpectations.CreatedBy = userId;
+            studentExpectations.RequestDate = DateTime.Now;
             studentExpectations.CreatedTime = CoreHelper.SystemTimeNow;
             studentExpectations.LastUpdatedBy = userId;
             studentExpectations.LastUpdatedTime = CoreHelper.SystemTimeNow;

@@ -63,6 +63,8 @@ namespace DoAnChuyenNganh.Services.Service
             outgoingDocument.UserId = Guid.Parse(userId);
             outgoingDocument.CreatedBy = userId;
             outgoingDocument.CreatedTime = CoreHelper.SystemTimeNow;
+            outgoingDocument.SendDate = DateTime.Now;
+            outgoingDocument.DueDate = DateTime.Now.AddDays(7);
 
             await _unitOfWork.GetRepository<OutgoingDocument>().InsertAsync(outgoingDocument);
             await _unitOfWork.SaveAsync();

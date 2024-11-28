@@ -17,7 +17,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
             _studentService = studentService;
         }
 
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo Vụ Khoa, Giảng viên")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa, Giảng viên")]
         [HttpGet]
         public async Task<IActionResult> GetStudents(string? id, string? name, string? studentClass, string? studentMajor, int index = 1, int pageSize = 10)
         {
@@ -25,7 +25,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
             return Ok(BaseResponse<BasePaginatedList<StudentResponseDTO>>.OkResponse(paginatedStudents));
         }
 
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo Vụ Khoa")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
         [HttpPost]
         public async Task<IActionResult> CreateStudent(StudentModelView studentModelView)
         {
@@ -33,7 +33,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
             return Ok(BaseResponse<string>.OkResponse("Thêm thông tin sinh viên thành công!"));
         }
 
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo Vụ Khoa")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
         [HttpPut]
         public async Task<IActionResult> UpdateStudent(string id, StudentModelView studentModelView)
         {
@@ -41,7 +41,7 @@ namespace DoAnChuyenNganhBE.API.Controllers
             return Ok(BaseResponse<string>.OkResponse("Sửa thông tin sinh viên thành công!"));
         }
 
-        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo Vụ Khoa")]
+        [Authorize(Roles = "Trưởng khoa, Phó trưởng khoa, Trưởng bộ môn, Giáo vụ khoa")]
         [HttpDelete]
         public async Task<IActionResult> DeleteStudent(string id)
         {

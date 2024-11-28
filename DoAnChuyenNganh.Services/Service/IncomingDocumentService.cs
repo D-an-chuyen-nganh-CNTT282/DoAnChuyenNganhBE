@@ -58,6 +58,8 @@ namespace DoAnChuyenNganh.Services.Service
             newincomingdocument.UserId = Guid.Parse(UserId);
             newincomingdocument.CreatedTime = CoreHelper.SystemTimeNow;
             newincomingdocument.CreatedBy = UserId;
+            newincomingdocument.ReceivedDate = DateTime.Now;
+            newincomingdocument.DueDate = DateTime.Now.AddDays(7);
 
             await _unitOfWork.GetRepository<IncomingDocument>().InsertAsync(newincomingdocument);
             await _unitOfWork.SaveAsync();
